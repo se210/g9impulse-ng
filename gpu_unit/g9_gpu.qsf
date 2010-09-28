@@ -41,27 +41,11 @@ set_global_assignment -name DEVICE EP2C35F672C6
 set_global_assignment -name TOP_LEVEL_ENTITY g9_gpu
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 10.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "13:13:38  SEPTEMBER 28, 2010"
-set_global_assignment -name LAST_QUARTUS_VERSION 10.0
+set_global_assignment -name LAST_QUARTUS_VERSION "10.0 SP1"
 set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
 set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
-set_global_assignment -name SOURCE_FILE gpu.sopcinfo
-set_global_assignment -name SOPC_FILE gpu.sopc
-set_global_assignment -name QUARTUS_PTF_FILE gpu.ptf
-set_global_assignment -name VHDL_FILE Switches.vhd
-set_global_assignment -name VHDL_FILE onchip_memory2_0.vhd
-set_global_assignment -name VHDL_FILE LEDs.vhd
-set_global_assignment -name VHDL_FILE jtag_uart_0.vhd
-set_global_assignment -name VHDL_FILE gpu.vhd
-set_global_assignment -name VHDL_FILE cpu_0_test_bench.vhd
-set_global_assignment -name VHDL_FILE cpu_0_oci_test_bench.vhd
-set_global_assignment -name VHDL_FILE cpu_0_jtag_debug_module_wrapper.vhd
-set_global_assignment -name VHDL_FILE cpu_0_jtag_debug_module_tck.vhd
-set_global_assignment -name VHDL_FILE cpu_0_jtag_debug_module_sysclk.vhd
-set_global_assignment -name VHDL_FILE cpu_0.vhd
-set_global_assignment -name QIP_FILE gpu.qip
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
-set_global_assignment -name VHDL_FILE g9_gpu.vhd
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
@@ -492,4 +476,22 @@ set_location_assignment PIN_V24 -to GPIO_1[32]
 set_location_assignment PIN_V23 -to GPIO_1[33]
 set_location_assignment PIN_W25 -to GPIO_1[34]
 set_location_assignment PIN_W23 -to GPIO_1[35]
+set_global_assignment -name VHDL_FILE cpu_0_mult_cell.vhd
+set_global_assignment -name VHDL_FILE sdram_0.vhd
+set_global_assignment -name SOURCE_FILE gpu.sopcinfo
+set_global_assignment -name SOPC_FILE gpu.sopc
+set_global_assignment -name QUARTUS_PTF_FILE gpu.ptf
+set_global_assignment -name VHDL_FILE Switches.vhd
+set_global_assignment -name VHDL_FILE onchip_memory2_0.vhd
+set_global_assignment -name VHDL_FILE LEDs.vhd
+set_global_assignment -name VHDL_FILE jtag_uart_0.vhd
+set_global_assignment -name VHDL_FILE gpu.vhd
+set_global_assignment -name VHDL_FILE cpu_0_test_bench.vhd
+set_global_assignment -name VHDL_FILE cpu_0_oci_test_bench.vhd
+set_global_assignment -name VHDL_FILE cpu_0_jtag_debug_module_wrapper.vhd
+set_global_assignment -name VHDL_FILE cpu_0_jtag_debug_module_tck.vhd
+set_global_assignment -name VHDL_FILE cpu_0_jtag_debug_module_sysclk.vhd
+set_global_assignment -name VHDL_FILE cpu_0.vhd
+set_global_assignment -name QIP_FILE gpu.qip
+set_global_assignment -name VHDL_FILE g9_gpu.vhd
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

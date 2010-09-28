@@ -15,7 +15,7 @@
    <frequency preferredWidth="119" />
   </columns>
  </clocktable>
- <window width="900" height="600" x="0" y="0" />
+ <window width="900" height="600" x="420" y="125" />
  <library
-   expandedCategories="Library/Interface Protocols,Library/Interface Protocols/Serial,Project,Library" />
+   expandedCategories="Library/Memories and Memory Controllers,Project,Library/Memories and Memory Controllers/SDRAM,Library" />
 </preferences>
