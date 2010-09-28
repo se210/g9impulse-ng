@@ -1,0 +1,4 @@
+set_global_assignment -name SDC_FILE [file join $::quartus(qip_path) cpu_0.sdc]
+set_global_assignment -name SOURCE_FILE [file join $::quartus(qip_path) cpu_0.ocp]
+set_global_assignment -name SOPC_BUILDER_SIGNATURE_ID 00000000000000E00000012B59952FF5 
+ 
