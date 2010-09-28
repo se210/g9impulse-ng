@@ -170,7 +170,7 @@ begin
     variable status : file_open_status; -- status for fopen
   begin  -- process
     if initial = true then
-      file_open (status, text_handle, "C:/g9impulse-ng/g9impulse-ng/gpu_unit/gpu_sim/jtag_uart_0_output_stream.dat", WRITE_MODE);
+      file_open (status, text_handle, "C:/Users/SEJOON/Desktop/g9impulse-ng/gpu_unit/gpu_sim/jtag_uart_0_output_stream.dat", WRITE_MODE);
       initial := false;                 -- done!
     end if;
     wait;                               -- wait forever
@@ -189,7 +189,7 @@ begin
         write (data_string,To_bitvector(data)); -- every char flushes line
         writeline (text_handle,data_string);
         file_close (text_handle);     -- flush buffer
-        file_open (status, text_handle, "C:/g9impulse-ng/g9impulse-ng/gpu_unit/gpu_sim/jtag_uart_0_output_stream.dat", APPEND_MODE);
+        file_open (status, text_handle, "C:/Users/SEJOON/Desktop/g9impulse-ng/gpu_unit/gpu_sim/jtag_uart_0_output_stream.dat", APPEND_MODE);
                            
         -- save up characters into a line to send to the screen
         write (echo_string,bin_to_char(data));
@@ -467,7 +467,7 @@ architecture europa of jtag_uart_0_drom_module is
           signal safe_delay : STD_LOGIC; 
           FILE mutex_handle : TEXT ;  -- open this for read and write manually.
           -- stream can be opened simply for read...
-          FILE stream_handle : TEXT open READ_MODE is "C:/g9impulse-ng/g9impulse-ng/gpu_unit/gpu_sim/jtag_uart_0_input_stream.dat";
+          FILE stream_handle : TEXT open READ_MODE is "C:/Users/SEJOON/Desktop/g9impulse-ng/gpu_unit/gpu_sim/jtag_uart_0_input_stream.dat";
 
 -- synthesis translate_off
 -- convert functions deadlifted from e_rom.pm
@@ -767,7 +767,7 @@ begin
         -- blast mutex via textio after falling edge of safe
         if mutex(0) /= X"00000000" and safe_wire = '0' and safe_delay = '1' then
 	  if interactive then           -- bash mutex
-            file_open (status, mutex_handle, "C:/g9impulse-ng/g9impulse-ng/gpu_unit/gpu_sim/jtag_uart_0_input_mutex.dat", WRITE_MODE);
+            file_open (status, mutex_handle, "C:/Users/SEJOON/Desktop/g9impulse-ng/gpu_unit/gpu_sim/jtag_uart_0_input_mutex.dat", WRITE_MODE);
             write (mutex_string, string'("0")); -- balance ' for emacs quoting
             writeline (mutex_handle, mutex_string);
             file_close (mutex_handle);
@@ -783,12 +783,12 @@ begin
         else                            -- do the real work
           poll_count := 0;
           -- get mutex via textio ...
-          mutex(0) <= get_mutex_val ("C:/g9impulse-ng/g9impulse-ng/gpu_unit/gpu_sim/jtag_uart_0_input_mutex.dat");
+          mutex(0) <= get_mutex_val ("C:/Users/SEJOON/Desktop/g9impulse-ng/gpu_unit/gpu_sim/jtag_uart_0_input_mutex.dat");
           if mutex(0) /= X"00000000" and safe_wire = '0' then
             -- read stream into array after previous stream is complete
             mutex (1) <= mutex (0); -- save mutex value for address compare
             -- get mem_array via textio ...
-            mem_array <= readmemb("C:/g9impulse-ng/g9impulse-ng/gpu_unit/gpu_sim/jtag_uart_0_input_stream.dat");
+            mem_array <= readmemb("C:/Users/SEJOON/Desktop/g9impulse-ng/gpu_unit/gpu_sim/jtag_uart_0_input_stream.dat");
             -- prep address and pre-pulse to alert world to new contents
             address <= "000000000000";
             pre <= '1';

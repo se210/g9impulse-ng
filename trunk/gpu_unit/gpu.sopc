@@ -32,7 +32,7 @@
    {
       datum baseAddress
       {
-         value = "12320";
+         value = "16789536";
          type = "long";
       }
    }
@@ -57,11 +57,14 @@
          type = "String";
       }
    }
+   element gpu
+   {
+   }
    element cpu_0.jtag_debug_module
    {
       datum baseAddress
       {
-         value = "10240";
+         value = "16787456";
          type = "long";
       }
    }
@@ -74,7 +77,7 @@
       }
       datum megawizard_uipreferences
       {
-         value = "{}";
+         value = "{output_language=VHDL, output_directory=C:\\Users\\SEJOON\\Desktop\\g9impulse-ng\\gpu_unit}";
          type = "String";
       }
    }
@@ -91,19 +94,19 @@
          type = "String";
       }
    }
+   element sdram_0.s1
+   {
+      datum baseAddress
+      {
+         value = "8388608";
+         type = "long";
+      }
+   }
    element Switches.s1
    {
       datum baseAddress
       {
-         value = "12288";
-         type = "long";
-      }
-   }
-   element onchip_memory2_0.s1
-   {
-      datum baseAddress
-      {
-         value = "4096";
+         value = "16789504";
          type = "long";
       }
    }
@@ -111,8 +114,29 @@
    {
       datum baseAddress
       {
-         value = "12304";
+         value = "16789520";
          type = "long";
+      }
+   }
+   element onchip_memory2_0.s1
+   {
+      datum baseAddress
+      {
+         value = "16781312";
+         type = "long";
+      }
+   }
+   element sdram_0
+   {
+      datum _sortIndex
+      {
+         value = "6";
+         type = "int";
+      }
+      datum megawizard_uipreferences
+      {
+         value = "{output_language=VHDL, output_directory=C:\\Users\\SEJOON\\Desktop\\g9impulse-ng\\gpu_unit}";
+         type = "String";
       }
    }
 }
@@ -122,10 +146,10 @@
  <parameter name="generateLegacySim" value="false" />
  <parameter name="globalResetBus" value="true" />
  <parameter name="hdlLanguage" value="VHDL" />
- <parameter name="projectName" value="g9_gpu" />
+ <parameter name="projectName" value="g9_gpu.qpf" />
  <parameter name="sopcBorderPoints" value="true" />
- <parameter name="systemHash" value="2036110504" />
- <parameter name="timeStamp" value="1285698166668" />
+ <parameter name="systemHash" value="-12311420833" />
+ <parameter name="timeStamp" value="1285710125257" />
  <module kind="clock_source" version="10.0" enabled="1" name="clk_0">
   <parameter name="clockFrequency" value="50000000" />
   <parameter name="clockFrequencyKnown" value="true" />
@@ -163,7 +187,7 @@
   <parameter name="setting_activateModelChecker" value="false" />
   <parameter name="setting_HDLSimCachesCleared" value="true" />
   <parameter name="setting_HBreakTest" value="false" />
-  <parameter name="resetSlave" value="onchip_memory2_0.s1" />
+  <parameter name="resetSlave" value="sdram_0.s1" />
   <parameter name="resetOffset" value="0" />
   <parameter name="muldiv_multiplierType" value="EmbeddedMulFast" />
   <parameter name="muldiv_divider" value="false" />
@@ -184,14 +208,14 @@
   <parameter name="mmu_TLBMissExcOffset" value="0" />
   <parameter name="manuallyAssignCpuID" value="false" />
   <parameter name="internalIrqMaskSystemInfo" value="1" />
-  <parameter name="instSlaveMapParam"><![CDATA[<address-map><slave name='onchip_memory2_0.s1' start='0x1000' end='0x2000' /><slave name='cpu_0.jtag_debug_module' start='0x2800' end='0x3000' /></address-map>]]></parameter>
-  <parameter name="instAddrWidth" value="14" />
+  <parameter name="instSlaveMapParam"><![CDATA[<address-map><slave name='sdram_0.s1' start='0x800000' end='0x1000000' /><slave name='onchip_memory2_0.s1' start='0x1001000' end='0x1002000' /><slave name='cpu_0.jtag_debug_module' start='0x1002800' end='0x1003000' /></address-map>]]></parameter>
+  <parameter name="instAddrWidth" value="25" />
   <parameter name="impl" value="Tiny" />
   <parameter name="icache_size" value="_4096" />
   <parameter name="icache_ramBlockType" value="Automatic" />
   <parameter name="icache_numTCIM" value="_0" />
   <parameter name="icache_burstType" value="None" />
-  <parameter name="exceptionSlave" value="onchip_memory2_0.s1" />
+  <parameter name="exceptionSlave" value="sdram_0.s1" />
   <parameter name="exceptionOffset" value="32" />
   <parameter name="deviceFeaturesSystemInfo">M512_MEMORY 0 M4K_MEMORY 1 M9K_MEMORY 0 M20K_MEMORY 0 M144K_MEMORY 0 MRAM_MEMORY 0 MLAB_MEMORY 0 ESB 0 EPCS 1 DSP 0 EMUL 1 HARDCOPY 0 LVDS_IO 0 ADDRESS_STALL 1 TRANSCEIVER_3G_BLOCK 0 TRANSCEIVER_6G_BLOCK 0 DSP_SHIFTER_BLOCK 0</parameter>
   <parameter name="deviceFamilyName" value="Cyclone II" />
@@ -208,8 +232,8 @@
   <parameter name="dcache_numTCDM" value="_0" />
   <parameter name="dcache_lineSize" value="_32" />
   <parameter name="dcache_bursts" value="false" />
-  <parameter name="dataSlaveMapParam"><![CDATA[<address-map><slave name='onchip_memory2_0.s1' start='0x1000' end='0x2000' /><slave name='cpu_0.jtag_debug_module' start='0x2800' end='0x3000' /><slave name='Switches.s1' start='0x3000' end='0x3010' /><slave name='LEDs.s1' start='0x3010' end='0x3020' /><slave name='jtag_uart_0.avalon_jtag_slave' start='0x3020' end='0x3028' /></address-map>]]></parameter>
-  <parameter name="dataAddrWidth" value="14" />
+  <parameter name="dataSlaveMapParam"><![CDATA[<address-map><slave name='sdram_0.s1' start='0x800000' end='0x1000000' /><slave name='onchip_memory2_0.s1' start='0x1001000' end='0x1002000' /><slave name='cpu_0.jtag_debug_module' start='0x1002800' end='0x1003000' /><slave name='Switches.s1' start='0x1003000' end='0x1003010' /><slave name='LEDs.s1' start='0x1003010' end='0x1003020' /><slave name='jtag_uart_0.avalon_jtag_slave' start='0x1003020' end='0x1003028' /></address-map>]]></parameter>
+  <parameter name="dataAddrWidth" value="25" />
   <parameter name="cpuReset" value="false" />
   <parameter name="cpuID" value="0" />
   <parameter name="clockFrequency" value="50000000" />
@@ -283,6 +307,34 @@
   <parameter name="writeBufferDepth" value="64" />
   <parameter name="writeIRQThreshold" value="8" />
  </module>
+ <module
+   kind="altera_avalon_new_sdram_controller"
+   version="10.0"
+   enabled="1"
+   name="sdram_0">
+  <parameter name="TAC" value="5.5" />
+  <parameter name="TMRD" value="3" />
+  <parameter name="TRCD" value="20.0" />
+  <parameter name="TRFC" value="70.0" />
+  <parameter name="TRP" value="20.0" />
+  <parameter name="TWR" value="14.0" />
+  <parameter name="casLatency" value="3" />
+  <parameter name="clockRate" value="50000000" />
+  <parameter name="columnWidth" value="8" />
+  <parameter name="dataWidth" value="16" />
+  <parameter name="generateSimulationModel" value="false" />
+  <parameter name="initNOPDelay" value="0.0" />
+  <parameter name="initRefreshCommands" value="2" />
+  <parameter name="masteredTristateBridgeSlave" value="" />
+  <parameter name="model" value="custom" />
+  <parameter name="numberOfBanks" value="4" />
+  <parameter name="numberOfChipSelects" value="1" />
+  <parameter name="pinsSharedViaTriState" value="false" />
+  <parameter name="powerUpDelay" value="100.0" />
+  <parameter name="refreshPeriod" value="15.625" />
+  <parameter name="registerDataIn" value="true" />
+  <parameter name="rowWidth" value="12" />
+ </module>
  <connection kind="clock" version="10.0" start="clk_0.clk" end="cpu_0.clk" />
  <connection
    kind="avalon"
@@ -290,7 +342,7 @@
    start="cpu_0.instruction_master"
    end="cpu_0.jtag_debug_module">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x2800" />
+  <parameter name="baseAddress" value="0x01002800" />
  </connection>
  <connection
    kind="avalon"
@@ -298,7 +350,7 @@
    start="cpu_0.data_master"
    end="cpu_0.jtag_debug_module">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x2800" />
+  <parameter name="baseAddress" value="0x01002800" />
  </connection>
  <connection
    kind="clock"
@@ -311,7 +363,7 @@
    start="cpu_0.instruction_master"
    end="onchip_memory2_0.s1">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x1000" />
+  <parameter name="baseAddress" value="0x01001000" />
  </connection>
  <connection
    kind="avalon"
@@ -319,7 +371,7 @@
    start="cpu_0.data_master"
    end="onchip_memory2_0.s1">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x1000" />
+  <parameter name="baseAddress" value="0x01001000" />
  </connection>
  <connection kind="clock" version="10.0" start="clk_0.clk" end="Switches.clk" />
  <connection
@@ -328,12 +380,12 @@
    start="cpu_0.data_master"
    end="Switches.s1">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x3000" />
+  <parameter name="baseAddress" value="0x01003000" />
  </connection>
  <connection kind="clock" version="10.0" start="clk_0.clk" end="LEDs.clk" />
  <connection kind="avalon" version="6.1" start="cpu_0.data_master" end="LEDs.s1">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x3010" />
+  <parameter name="baseAddress" value="0x01003010" />
  </connection>
  <connection kind="clock" version="10.0" start="clk_0.clk" end="jtag_uart_0.clk" />
  <connection
@@ -342,7 +394,7 @@
    start="cpu_0.data_master"
    end="jtag_uart_0.avalon_jtag_slave">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x3020" />
+  <parameter name="baseAddress" value="0x01003020" />
  </connection>
  <connection
    kind="interrupt"
@@ -350,5 +402,22 @@
    start="cpu_0.d_irq"
    end="jtag_uart_0.irq">
   <parameter name="irqNumber" value="0" />
+ </connection>
+ <connection kind="clock" version="10.0" start="clk_0.clk" end="sdram_0.clk" />
+ <connection
+   kind="avalon"
+   version="6.1"
+   start="cpu_0.instruction_master"
+   end="sdram_0.s1">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x00800000" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="6.1"
+   start="cpu_0.data_master"
+   end="sdram_0.s1">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x00800000" />
  </connection>
 </system>
