@@ -28,7 +28,7 @@ use IEEE.numeric_std.all;
 use WORK.common.all;
 --use WORK.xsasdram.all;
 use WORK.sdram.all;
-use WORK.vga_pckg.all;
+--use WORK.vga_pckg.all;
 use WORK.blitter_pckg.all;
 use WORK.sdram_pll_pckg.all;
 use WORK.view_pckg.all;
@@ -379,6 +379,12 @@ begin
 	port map ( 
            Clk => pin_clkin,
            Reset => not rst_i,
+           wr => rdDone0,
+           pixel_data_in => pixels,
+           field_color => field_color_r,
+           
+           eof => eof,
+           full => full,
            Red => pin_red_in,
            Green => pin_green_in,
            Blue  => pin_blue_in,
