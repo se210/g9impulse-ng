@@ -73,24 +73,25 @@ component vga_controller is
            DrawY : out std_logic_vector(9 downto 0));
 end component;
 
-component Color_Mapper is
-   Port ( DrawX : in std_logic_vector(9 downto 0);
-          DrawY : in std_logic_vector(9 downto 0);
-          R_in : in std_logic_vector(1 downto 0);
-          G_in : in std_logic_vector(1 downto 0);
-          B_in : in std_logic_vector(1 downto 0);
-          
-          Red   : out std_logic_vector(1 downto 0);
-          Green : out std_logic_vector(1 downto 0);
-          Blue  : out std_logic_vector(1 downto 0));
-end component;
+--component Color_Mapper is
+--   Port ( DrawX : in std_logic_vector(9 downto 0);
+--          DrawY : in std_logic_vector(9 downto 0);
+--          R_in : in std_logic_vector(1 downto 0);
+--          G_in : in std_logic_vector(1 downto 0);
+--          B_in : in std_logic_vector(1 downto 0);
+--          
+--          Red   : out std_logic_vector(1 downto 0);
+--          Green : out std_logic_vector(1 downto 0);
+--          Blue  : out std_logic_vector(1 downto 0));
+--end component;
 
 signal rst, vsSig : std_logic;
 signal DrawXSig, DrawYSig : std_logic_vector(9 downto 0);
 signal r,g,b : std_logic_vector(1 downto 0);
-signal blank_i : std_logic
+signal blank_i : std_logic;
 signal   eof_i        :     std_logic;
 signal   fifo_rst, fifo_empty       :     std_logic;
+signal pixel : std_logic_vector(7 downto 0);
 signal   fifo_level                 :     std_logic_vector(7 downto 0);
 
 begin
@@ -108,15 +109,15 @@ vgaSync_instance : vga_controller
             DrawX => DrawXSig,
             DrawY => DrawYSig);
 
-Color_instance : Color_Mapper
-   Port Map(DrawX => DrawXSig,
-            DrawY => DrawYSig,
-            R_in => r,
-            G_in => g,
-            B_in => b,
-            Red => Red,
-            Green => Green,
-            Blue => Blue);
+--Color_instance : Color_Mapper
+--   Port Map(DrawX => DrawXSig,
+--            DrawY => DrawYSig,
+--            R_in => r,
+--            G_in => g,
+--            B_in => b,
+--            Red => Red,
+--            Green => Green,
+--            Blue => Blue);
             
 fifo : fifo_cc
     port map (
@@ -144,29 +145,29 @@ b <= "10";
   visible    <= not blank_i;    -- pixels are visible when blank is inactive 
 
   -- get the current pixel from the word of pixel data or read more pixel data from the buffer
-  get_pixel : process(visible, pixel_data_out, pixel_data_r, rd_r, pixel_cnt, fifo_empty)
+  get_pixel : process(visible, pixel_data_out, pixel_data_r, rd_r, DrawXSig, fifo_empty)
   begin
     rd_x <= NO;                         -- by default, don't read next word of pixel data from the buffer
 
     -- shift pixel data depending on its width so the next pixel is in the LSBs of the pixel data shift register
     case PIXEL_WIDTH is
       when 1      =>                    -- 1-bit pixels, 16 per pixel data word
-        if (visible = YES) and (pixel_cnt(3 downto 0) = 0) then
+        if (visible = YES) and (DrawXSig(3 downto 0) = 0) then
           rd_x       <= YES;            -- read new pixel data from buffer every 16 clocks during visible portion of scan line
         end if;
         pixel_data_x <= "0" & pixel_data_r(15 downto 1);  -- left-shift pixel data to move next pixel to LSB
       when 2      =>                    -- 2-bit pixels, 8 per pixel data word
-        if (visible = YES) and (pixel_cnt(2 downto 0) = 0) then
+        if (visible = YES) and (DrawXSig(2 downto 0) = 0) then
           rd_x       <= YES;            -- read new pixel data from buffer every 8 clocks during visible portion of scan line
         end if;
         pixel_data_x <= "00" & pixel_data_r(15 downto 2);  -- left-shift pixel data to move next pixel to LSB 
       when 4      =>                    -- 4-bit pixels, 4 per pixel data word
-        if (visible = YES) and (pixel_cnt(1 downto 0) = 0) then
+        if (visible = YES) and (DrawXSig(1 downto 0) = 0) then
           rd_x       <= YES;            -- read new pixel data from buffer every 4 clocks during visible portion of scan line
         end if;
         pixel_data_x <= "0000" & pixel_data_r(15 downto 4);  -- left-shift pixel data to move next pixel to LSB 
       when 8      =>                    -- 8-bit pixels, 2 per pixel data word
-        if (visible = YES) and (pixel_cnt(0 downto 0) = 0) then
+        if (visible = YES) and (DrawXSig(0 downto 0) = 0) then
           rd_x       <= YES;            -- read new pixel data from buffer every 2 clocks during visible portion of scan line
         end if;
         pixel_data_x <= "00000000" & pixel_data_r(15 downto 8);  -- left-shift pixel data to move next pixel to LSB 
