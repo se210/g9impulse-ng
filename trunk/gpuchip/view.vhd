@@ -153,7 +153,7 @@ blank <= blank_i;
   eof      <= eof_i;
   fifo_rst <= eof_i or rst;             -- clear the contents of the pixel buffer at the end of every frame
 
-  visible    <= not blank_i;    -- pixels are visible when blank is inactive 
+  visible    <= blank_i;    -- pixels are visible when blank is inactive 
 
   -- get the current pixel from the word of pixel data or read more pixel data from the buffer
   get_pixel : process(visible, pixel_data_out, pixel_data_r, rd_r, DrawXSig, fifo_empty)
@@ -194,11 +194,8 @@ blank <= blank_i;
 
     -- break the pixel into its red, green and blue components
     r <= rgb_r(5 downto 4);
-    --r <= "11";
     g <= rgb_r(3 downto 2);
     b <= rgb_r(1 downto 0);
-    --g <= "11";
-    --b <= "11";
   end process map_pixel;
 
 -- update registers
