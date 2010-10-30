@@ -143,7 +143,6 @@ set_location_assignment PIN_H11 -to pin_red[6]
 set_location_assignment PIN_H12 -to pin_red[7]
 set_location_assignment PIN_F11 -to pin_red[8]
 set_location_assignment PIN_E10 -to pin_red[9]
-set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
 set_global_assignment -name MISC_FILE gpuchip.dpf
 set_global_assignment -name VHDL_FILE VGA_controller.vhd
 set_global_assignment -name VHDL_FILE view.vhd
@@ -153,6 +152,7 @@ set_global_assignment -name VHDL_FILE blitter.vhd
 set_global_assignment -name VHDL_FILE common.vhd
 set_global_assignment -name VHDL_FILE gpuchip.vhd
 set_global_assignment -name VHDL_FILE sdramcntl.vhd
-set_global_assignment -name VHDL_FILE vga.vhd
 set_global_assignment -name QIP_FILE sdram_pll.qip
 set_global_assignment -name VHDL_FILE fifo_cc.vhd
+set_global_assignment -name PROJECT_OUTPUT_DIRECTORY .\\output
+set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
