@@ -32,26 +32,27 @@ use WORK.sdram.all;
 use WORK.blitter_pckg.all;
 use WORK.sdram_pll_pckg.all;
 use WORK.view_pckg.all;
+use WORK.HexDriver_pckg.all;
 
 entity gpuChip is
 	
 	generic(
-      FREQ            :       natural                       := 50_000;  -- frequency of operation in KHz
-      PIPE_EN         :       boolean                       := true;  -- enable fast, pipelined SDRAM operation
-      MULTIPLE_ACTIVE_ROWS:   boolean 								:= false;  -- if true, allow an active row in each bank
-		CLK_DIV         :       real								   := 1.0;  -- SDRAM Clock div
+		FREQ            :       natural                       := 50_000;  -- frequency of operation in KHz
+		PIPE_EN         :       boolean                       := true;  -- enable fast, pipelined SDRAM operation
+		MULTIPLE_ACTIVE_ROWS:   boolean 					  := false;  -- if true, allow an active row in each bank
+		CLK_DIV         :       real						  := 1.0;  -- SDRAM Clock div
 		NROWS           :       natural                       := 4096;  -- number of rows in the SDRAM
-      NCOLS           :       natural                       := 256;  -- number of columns in each SDRAM row
-   	SADDR_WIDTH 	 : 		natural								:= 12;
-	  	DATA_WIDTH      :       natural 								:= 16;  -- SDRAM databus width
-		ADDR_WIDTH      :       natural 								:= 24;  -- host-side address width
-	 	VGA_CLK_DIV     :       natural 								:= 4;  -- pixel clock = FREQ / CLK_DIV
-   	PIXEL_WIDTH     :       natural 								:= 8;  -- width of a pixel in memory
-    	NUM_RGB_BITS    :       natural 								:= 2;  -- #bits in each R,G,B component of a pixel
-    	PIXELS_PER_LINE :       natural 								:= 320; -- width of image in pixels
-    	LINES_PER_FRAME :       natural 								:= 240;  -- height of image in scanlines
-    	FIT_TO_SCREEN   :       boolean 								:= true;  -- adapt video timing to fit image width x 		 
-	   PORT_TIME_SLOTS :       std_logic_vector(15 downto 0) := "0000001111111111"
+		NCOLS           :       natural                       := 256;  -- number of columns in each SDRAM row
+		SADDR_WIDTH 	 : 		natural						  := 12;
+	  	DATA_WIDTH      :       natural 					  := 16;  -- SDRAM databus width
+		ADDR_WIDTH      :       natural 					  := 24;  -- host-side address width
+	 	VGA_CLK_DIV     :       natural 					  := 4;  -- pixel clock = FREQ / CLK_DIV
+		PIXEL_WIDTH     :       natural 					  := 8;  -- width of a pixel in memory
+    	NUM_RGB_BITS    :       natural 					  := 2;  -- #bits in each R,G,B component of a pixel
+    	PIXELS_PER_LINE :       natural 					  := 320; -- width of image in pixels
+    	LINES_PER_FRAME :       natural 					  := 240;  -- height of image in scanlines
+    	FIT_TO_SCREEN   :       boolean 					  := true;  -- adapt video timing to fit image width x 		 
+	    PORT_TIME_SLOTS :       std_logic_vector(15 downto 0) := "0000001111111111"
    );
 	
 	port(
@@ -90,7 +91,10 @@ entity gpuChip is
 		pin_sAddr  : out std_logic_vector(11 downto 0);      -- SDRAM address bus
 		pin_sData  : inout std_logic_vector (16-1 downto 0);  -- data bus to SDRAM
 		pin_dqmh   : out std_logic;                  -- SDRAM DQMH
-		pin_dqml   : out std_logic                   -- SDRAM DQML			
+		pin_dqml   : out std_logic;                   -- SDRAM DQML	
+		
+		hex0 : out std_logic_vector(6 downto 0);
+		hex1 : out std_logic_vector(6 downto 0)		
 	);
 end gpuChip;
 
@@ -393,7 +397,17 @@ begin
            blank => pin_vga_blank,
            vs => pin_vsync_n,
            hs => pin_hsync_n);
-
+        
+--------------------------------------------------------------------------------------------------------------
+--Debugging Modules
+--------------------------------------------------------------------------------------------------------------
+	u7: HexDriver
+	port map ( In0 => port_in(3 downto 0),
+		   Out0 => hex0);
+		   
+	u8: HexDriver
+	port map ( In0 => port_in(7 downto 4),
+				Out0 => hex1);
 --------------------------------------------------------------------------------------------------------------
 -- End of Submodules
 --------------------------------------------------------------------------------------------------------------
