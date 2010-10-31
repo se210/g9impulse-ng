@@ -45,7 +45,7 @@ begin
 	end if;
 end process;
 
-  RGB_Display : process (game_on, DrawX, DrawY)
+  RGB_Display : process (game_on, DrawX, DrawY, R_in, G_in, B_in)
     variable GreenVar, BlueVar : std_logic_vector(22 downto 0);
   begin
     if (game_on = '1') then
