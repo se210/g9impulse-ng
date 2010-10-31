@@ -60,6 +60,7 @@ begin
 							  data => data_in,
 							  rdaddress => rd_addr,
 						  	  rden => rd_allow,
+                              wren => wr_allow,
 							  wraddress => wr_addr,
 							  q => data_out);
 

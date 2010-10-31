@@ -103,11 +103,27 @@ signal   pixel_data_x, pixel_data_r :     std_logic_vector(15 downto 0);
 signal   pixel_data_out             :     std_logic_vector(15 downto 0);
 signal   rgb_x, rgb_r               :     std_logic_vector(5 downto 0);
 signal visible : std_logic;
+signal   clk_div_cnt                :     unsigned(7 downto 0);
 
 begin
 
 rst <= not Reset; -- The push buttons are active low
-cke <= clk;
+--cke<='1';
+process(clk, rst)
+  begin
+    if rst = '1' then
+      clk_div_cnt   <= (others => '0');
+      cke           <= '1';
+    elsif rising_edge(clk) then
+      if clk_div_cnt = 3 then
+        clk_div_cnt <= (others => '0');
+        cke         <= '1';
+      else
+        clk_div_cnt <= clk_div_cnt + 1;
+        cke         <= '0';
+      end if;
+    end if;
+end process;
 
 vgaSync_instance : vga_controller
    Port map(clk => clk,
@@ -131,8 +147,8 @@ Color_instance : Color_Mapper
             Blue => Blue);
 
   -- pixel data buffer
-  cke_rd <= rd_x and cke;
-              
+   cke_rd <= rd_x and cke;
+          
 fifo : fifo_cc
     port map (
       clk      => clk,
@@ -162,7 +178,7 @@ blank <= blank_i;
 
     -- shift pixel data depending on its width so the next pixel is in the LSBs of the pixel data shift register
     -- 8-bit pixels, 2 per pixel data word
-    if (visible = '1') and (DrawXSig(0 downto 0) = 0) then
+    if (visible = '1') and (DrawXSig(0) = '0') then
       rd_x       <= '1';            -- read new pixel data from buffer every 2 clocks during visible portion of scan line
     end if;
     pixel_data_x <= "00000000" & pixel_data_r(15 downto 8);  -- left-shift pixel data to move next pixel to LSB 
@@ -188,7 +204,7 @@ blank <= blank_i;
     rgb_x <= pixel(7 downto 6) & pixel(4 downto 1);
 
     -- just blank the pixel if not in the visible region of the screen
-    if blank_i = '1' then
+    if visible = '0' then
       rgb_x <= (others => '0');
     end if;
 
