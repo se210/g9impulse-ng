@@ -20,7 +20,7 @@
 --release under the GNU General Public License
 --and kindly hosted by www.opencores.org
 
-library IEEE, UNISIM;
+library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 --use UNISIM.VComponents.all;
@@ -68,7 +68,7 @@ package Blitter_pckg is
 	end component Blitter;
 end package Blitter_pckg;
 
-library IEEE, UNISIM;
+library IEEE;
 use IEEE.std_logic_1164.all;
 --use IEEE.numeric_std.all;
 --use UNISIM.VComponents.all;

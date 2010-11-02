@@ -1,15 +1,3 @@
----------------------------------------------------------------------------
---      BouncingBall.vhd                                                 --
---      Viral Mehta                                                      --
---      Spring 2005                                                      --
---                                                                       --
---      Modified by Stephen Kempf 03-01-2006                             --
---                                03-12-2007                             --
---      Fall 2008 Distribution                                         --
---                                                                       --
---      For use with ECE 385 Lab 9                                       --
---      UIUC ECE Department                                              --
----------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.STD_LOGIC_ARITH.ALL;

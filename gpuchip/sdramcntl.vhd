@@ -1,4 +1,4 @@
-library IEEE, UNISIM;
+library IEEE;
 use IEEE.std_logic_1164.all;
 
 package sdram is
@@ -138,7 +138,7 @@ end package sdram;
 -- this header is not removed.
 --------------------------------------------------------------------
 
-library IEEE, UNISIM;
+library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.std_logic_unsigned.all;
 use IEEE.numeric_std.all;
@@ -795,7 +795,7 @@ end arch;
 -- this header is not removed.
 --------------------------------------------------------------------
 
-library IEEE, UNISIM;
+library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.std_logic_unsigned.all;
 use IEEE.numeric_std.all;

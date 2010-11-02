@@ -21,7 +21,7 @@
 --and kindly hosted by www.opencores.org
 
 
-library IEEE, unisim;
+library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 --use unisim.vcomponents.all;
@@ -55,7 +55,7 @@ package vga_pckg is
 end package vga_pckg;
 
 
-library ieee, unisim;
+library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
 --use unisim.vcomponents.all;
@@ -78,7 +78,7 @@ package fifo_cc_pckg is
 end package fifo_cc_pckg;
 
 
-library IEEE, unisim;
+library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 --use unisim.vcomponents.all;
@@ -429,7 +429,7 @@ end architecture vga_arch;
 
 
 
-library IEEE, unisim;
+library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 --use unisim.vcomponents.all;
@@ -513,7 +513,7 @@ begin
 
 end architecture sync_arch;
 
-library ieee, unisim;
+library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
 use ieee.numeric_std.all;
