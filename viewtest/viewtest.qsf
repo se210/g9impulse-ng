@@ -475,9 +475,8 @@ set_location_assignment PIN_V24 -to GPIO_1[32]
 set_location_assignment PIN_V23 -to GPIO_1[33]
 set_location_assignment PIN_W25 -to GPIO_1[34]
 set_location_assignment PIN_W23 -to GPIO_1[35]
-set_global_assignment -name SIMULATION_MODE FUNCTIONAL
+set_global_assignment -name SIMULATION_MODE TIMING
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output
-set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
 set_global_assignment -name VHDL_FILE ram2port.vhd
 set_global_assignment -name VHDL_FILE Color_Mapper.vhd
 set_global_assignment -name VHDL_FILE fifo_cc.vhd
@@ -487,3 +486,4 @@ set_global_assignment -name VHDL_FILE view.vhd
 set_global_assignment -name BDF_FILE viewtest.bdf
 set_global_assignment -name VECTOR_WAVEFORM_FILE viewtest.vwf
 set_global_assignment -name INCREMENTAL_VECTOR_INPUT_SOURCE viewtest.vwf
+set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
