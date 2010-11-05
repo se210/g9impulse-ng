@@ -94,7 +94,8 @@ entity gpuChip is
 		pin_dqml   : out std_logic;                   -- SDRAM DQML	
 		
 		hex0 : out std_logic_vector(6 downto 0);
-		hex1 : out std_logic_vector(6 downto 0)		
+		hex1 : out std_logic_vector(6 downto 0);
+		hex2 : out std_logic_vector(6 downto 0)		
 	);
 end gpuChip;
 
@@ -180,13 +181,14 @@ architecture arch of gpuChip is
 	-- VGA related signals
 	signal eof         									: std_logic;      -- end-of-frame signal from VGA controller
    signal full												: std_logic;      -- indicates when the VGA pixel buffer is full
-   signal vga_address      							: unsigned(ADDR_WIDTH-1 downto 0);  -- SDRAM address counter 
+   signal vga_address      							: unsigned(ADDR_WIDTH-1 downto 0);  -- SDRAM address counter
 	signal pixels											: std_logic_vector(DATA_WIDTH-1 downto 0);
 	signal rst_n											: std_logic;		--VGA reset (active low)
 	signal drawframe										: std_logic;  -- flag to indicate whether we are drawing current frame	
 	signal pin_red_in										: std_logic_vector(1 downto 0);
 	signal pin_green_in									: std_logic_vector(1 downto 0);
 	signal pin_blue_in									: std_logic_vector(1 downto 0);
+	signal visible : std_logic;
 	
 --------------------------------------------------------------------------------------------------------------
 -- Beginning of Submodules
@@ -226,8 +228,10 @@ begin
 		
 		-- Memory Port 1 connections
       rst1            => rst_i,
-      rd1             => rd1,
-      wr1             => wr1,
+--      rd1             => rd1,
+--      wr1             => wr1,
+	  rd1 => '0',
+	  wr1 => '0',
       rdPending1      => rdPending1,
       opBegun1        => opBegun1,
       earlyOpBegun1   => earlyOpBegun1,
@@ -396,7 +400,8 @@ begin
            sync => pin_vga_sync,
            blank => pin_vga_blank,
            vs => pin_vsync_n,
-           hs => pin_hsync_n);
+           hs => pin_hsync_n,
+           visible_out => visible);
         
 --------------------------------------------------------------------------------------------------------------
 --Debugging Modules
@@ -408,6 +413,10 @@ begin
 	u8: HexDriver
 	port map ( In0 => port_in(7 downto 4),
 				Out0 => hex1);
+				
+	u9: HexDriver
+	port map ( In0 => port_addr(3 downto 0),
+			Out0 => hex2);
 --------------------------------------------------------------------------------------------------------------
 -- End of Submodules
 --------------------------------------------------------------------------------------------------------------
@@ -415,9 +424,9 @@ begin
 
 	-- connect internal signals	
 	
-	pin_red <= pin_red_in & x"7F";
-	pin_green <= pin_green_in & x"7F";
-	pin_blue <= pin_blue_in & x"7F";
+	pin_red <= pin_red_in & x"00";
+	pin_green <= pin_green_in & x"00";
+	pin_blue <= pin_blue_in & x"00";
 	--pin_vga_sync <= '0';
 	
 	pin_clkout <= sdram_clk1x;
@@ -426,7 +435,8 @@ begin
 	pin_ce_n <= '1';						  -- disable Flash RAM
 	sdram_bufclk <= sdram_clk1x;
   	
-	rd0 <= ((not full) and drawframe); -- negate the full signal for use in controlling the SDRAM read operation
+	--rd0 <= ((not full) and drawframe); -- negate the full signal for use in controlling the SDRAM read operation
+	rd0 <= '1';
 	hDIn0 <= "0000000000000000"; 		  -- don't need to write to port 0 (VGA Port)
 	wr0 <= '0';
 	hAddr0 <= std_logic_vector(vga_address);
@@ -435,7 +445,8 @@ begin
 
 	-- Port0 is reserved for VGA
 	--pixels <= hDOut0 when drawframe = '1' else "0000000000000000";
-	pixels <= x"FFFF";
+	--pixels <= pin_port_addr & pin_port_addr & pin_port_addr & pin_port_addr;
+	pixels <= hDOut0;
 
 	port_in   		<= pin_port_in;
 	port_addr 		<= pin_port_addr;
@@ -529,8 +540,10 @@ begin
 				 -- reset the address at the end of a video frame depending on which buffer is the front
 				if (front_buffer = YES) then
 					vga_address <= x"000000";
+					--vga_address <= x"3A6390";
 				else
-					vga_address <= x"00E000"; 
+					vga_address <= x"00E000";
+					--vga_address <= x"3A6390";
 				end if;
 					
 			elsif (earlyOpBegun0 = YES) then

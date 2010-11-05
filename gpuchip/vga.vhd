@@ -395,12 +395,9 @@ begin
     end if;
 
     -- break the pixel into its red, green and blue components
-    --r <= rgb_r(3*NUM_RGB_BITS-1 downto 2*NUM_RGB_BITS);
-    r <= "11";
-    --g <= rgb_r(2*NUM_RGB_BITS-1 downto NUM_RGB_BITS);
-    --b <= rgb_r(NUM_RGB_BITS-1 downto 0);
-    g <= "11";
-    b <= "11";
+    r <= rgb_r(3*NUM_RGB_BITS-1 downto 2*NUM_RGB_BITS);
+    g <= rgb_r(2*NUM_RGB_BITS-1 downto NUM_RGB_BITS);
+    b <= rgb_r(NUM_RGB_BITS-1 downto 0);
   end process map_pixel;
 
 -- update registers

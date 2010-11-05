@@ -25,7 +25,8 @@ entity Color_Mapper is
           
           Red   : out std_logic_vector(1 downto 0);
           Green : out std_logic_vector(1 downto 0);
-          Blue  : out std_logic_vector(1 downto 0));
+          Blue  : out std_logic_vector(1 downto 0);
+          visible: out std_logic);
 end Color_Mapper;
 
 architecture Behavioral of Color_Mapper is
@@ -36,6 +37,8 @@ constant game_y_max : std_logic_vector(9 downto 0) := CONV_STD_LOGIC_VECTOR(239,
 
 begin
 
+visible <= game_on;
+
 game_on_proc : process (DrawX, DrawY)
 begin
 	if((DrawX >= 0) and (DrawX < 320) and (DrawY < 240)) then
@@ -45,8 +48,7 @@ begin
 	end if;
 end process;
 
-  RGB_Display : process (game_on, DrawX, DrawY, R_in, G_in, B_in)
-    variable GreenVar, BlueVar : std_logic_vector(22 downto 0);
+  RGB_Display : process (DrawX, DrawY)
   begin
     if (game_on = '1') then
       Red <= R_in;
