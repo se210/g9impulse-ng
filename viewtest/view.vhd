@@ -33,7 +33,8 @@ package view_pckg is
            sync : out std_logic;
            blank : out std_logic;
            vs : out std_logic;
-           hs : out std_logic);
+           hs : out std_logic;
+           visible_out : out std_logic);
     end component view;
 end package view_pckg;
 
@@ -60,7 +61,8 @@ entity view is
            sync : out std_logic;
            blank : out std_logic;
            vs : out std_logic;
-           hs : out std_logic);
+           hs : out std_logic;
+           visible_out : out std_logic);
 end view;
 
 architecture Behavioral of view is
@@ -109,6 +111,7 @@ signal   clk_div_cnt                :     unsigned(7 downto 0);
 
 begin
 
+visible_out <= visible;
 rst <= not Reset; -- The push buttons are active low
 --cke<='1';
 --process(clk, rst)
@@ -160,11 +163,11 @@ fifo : fifo_cc
       data_in  => pixel_data_in,
       rst      => fifo_rst,
       data_out => pixel_data_out,
-      full     => open,
+      full     => full,
       empty    => fifo_empty,
       level    => fifo_level
       );
-  full   <= '1' when fifo_level(7 downto 3) = "11111" else '0';
+  --full   <= '1' when fifo_level(7 downto 3) = "11111" else '0';
             
 vs <= vsSig;
 blank <= blank_i;

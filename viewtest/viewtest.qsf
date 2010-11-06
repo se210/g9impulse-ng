@@ -483,7 +483,7 @@ set_global_assignment -name VHDL_FILE fifo_cc.vhd
 set_global_assignment -name VHDL_FILE HexDriver.vhd
 set_global_assignment -name VHDL_FILE VGA_controller.vhd
 set_global_assignment -name VHDL_FILE view.vhd
-set_global_assignment -name BDF_FILE viewtest.bdf
 set_global_assignment -name VECTOR_WAVEFORM_FILE viewtest.vwf
 set_global_assignment -name INCREMENTAL_VECTOR_INPUT_SOURCE viewtest.vwf
+set_global_assignment -name VHDL_FILE viewtest.vhd
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
