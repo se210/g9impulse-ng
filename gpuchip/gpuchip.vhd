@@ -95,7 +95,12 @@ entity gpuChip is
 		
 		hex0 : out std_logic_vector(6 downto 0);
 		hex1 : out std_logic_vector(6 downto 0);
-		hex2 : out std_logic_vector(6 downto 0)		
+		hex2 : out std_logic_vector(6 downto 0);
+		hex3 : out std_logic_vector(6 downto 0);
+		hex4 : out std_logic_vector(6 downto 0);
+		hex5 : out std_logic_vector(6 downto 0);
+		hex6 : out std_logic_vector(6 downto 0);
+		hex7 : out std_logic_vector(6 downto 0)		
 	);
 end gpuChip;
 
@@ -415,8 +420,28 @@ begin
 				Out0 => hex1);
 				
 	u9: HexDriver
-	port map ( In0 => port_addr(3 downto 0),
+	port map ( In0 => std_logic_vector(vga_address(3 downto 0)),
 			Out0 => hex2);
+			
+	u10: HexDriver
+	port map ( In0 => std_logic_vector(vga_address(7 downto 4)),
+			Out0 => hex3);
+			
+	u11: HexDriver
+	port map ( In0 => std_logic_vector(vga_address(11 downto 8)),
+			Out0 => hex4);
+			
+	u12: HexDriver
+	port map ( In0 => std_logic_vector(vga_address(15 downto 12)),
+			Out0 => hex5);
+	
+	u13: HexDriver
+	port map ( In0 => std_logic_vector(vga_address(19 downto 16)),
+			Out0 => hex6);
+			
+	u14: HexDriver
+	port map ( In0 => std_logic_vector(vga_address(23 downto 20)),
+			Out0 => hex7);
 --------------------------------------------------------------------------------------------------------------
 -- End of Submodules
 --------------------------------------------------------------------------------------------------------------
