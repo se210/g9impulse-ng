@@ -62,11 +62,11 @@ rst_i <= KEY(0);
 LEDR(0) <= eof_i;
 wr <= not full_i;
 			 
-generate_pixel : process (vga_clk_in,eof_i)
+generate_pixel : process (CLOCK_50,eof_i)
 begin
 	if(eof_i = '1') then
-		pixel <= (others=>'0');
-	elsif rising_edge(vga_clk_in) and visible='1' then
+		pixel <= x"0000";
+	elsif rising_edge(CLOCK_50) and visible='1' and full_i='0' then
 		pixel <= pixel+1;
 	end if;
 end process;
