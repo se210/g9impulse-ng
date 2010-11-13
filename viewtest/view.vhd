@@ -163,11 +163,11 @@ fifo : fifo_cc
       data_in  => pixel_data_in,
       rst      => fifo_rst,
       data_out => pixel_data_out,
-      full     => full,
+      full     => open,
       empty    => fifo_empty,
       level    => fifo_level
       );
-  --full   <= '1' when fifo_level(7 downto 3) = "11111" else '0';
+  full   <= '1' when fifo_level(7 downto 3) = "11111" else '0';
             
 vs <= vsSig;
 blank <= blank_i;
@@ -230,7 +230,7 @@ cke <= pixel_clk;
       --blank_r        <= (others => '0');
       pixel_data_r   <= (others => '0');
       rgb_r          <= (others => '0');
-    elsif falling_edge(clk) then
+    elsif rising_edge(clk) then
       --eof_r          <= eof_x;          -- end-of-frame signal goes at full clock rate to external system
       if cke = '1' then
         rd_r         <= rd_x;
