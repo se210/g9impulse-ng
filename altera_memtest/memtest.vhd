@@ -43,8 +43,7 @@ begin
     rst <= reset;
     errcnt <= cnt;
     addr <= addr_cnt_y;
-    data_out <= addr_cnt_y(15 downto 0);
-    be_n <= "00";
+    --data_out <= addr_cnt_y(15 downto 0);
     cs <= '1';
 	state_num <= state_num_internal;
 
@@ -67,7 +66,7 @@ begin
             addr_cnt_x<= conv_std_logic_vector(0,22);
         elsif (rising_edge(clk)) then
             if(state_cur=WRITE_INC or state_cur=READ_INC) then
-                addr_cnt_x<=addr_cnt_x+1;
+                addr_cnt_x<=addr_cnt_x + 1;
             else
                 addr_cnt_x<=addr_cnt_x;
             end if;
@@ -76,14 +75,14 @@ begin
 
     error_cnt: process(state_cur, clk, data_chk_y, data_in)
     begin
-        if(state_cur=INIT_R) then
+        if(state_cur=INIT_W) then
             cnt<= conv_std_logic_vector(0,24);
             data_chk_x<= conv_std_logic_vector(0,16);
         elsif (rising_edge(clk)) then
             --currently valid data is at the previous address in SDRAM
 			if(rvalid='1') then
 				data_chk_x <= data_chk_x + 1;
-				if (data_chk_y /= data_in(7 downto 0)) then
+				if (data_chk_y(15 downto 8) /= data_in(15 downto 8)) then
 					cnt <= cnt+1;
 				else
 					cnt <= cnt;
@@ -96,6 +95,7 @@ begin
 	 
     next_state: process (state_cur, start, waitreq, rvalid, addr_cnt_y)
     begin
+		be_n <= "11";
         case state_cur is
             when INIT_W => 
                 rd <= '0';
@@ -109,7 +109,8 @@ begin
             when WRITE_S =>
                 rd <= '0';
                 wr <= '1';
-				--data_out <= x"ABCD";
+                be_n <= "00";
+				data_out <= addr_cnt_y(15 downto 0);
 				--we need to keep outputting current address if waitreq is high
                 if (waitreq = '1') then
                     state_nxt<= WRITE_S;
@@ -119,12 +120,12 @@ begin
 					 state_num_internal <= x"1";
             when WRITE_INC=>
                 rd <= '0';
-                wr <= '1';
+                wr <= '0';
 				state_nxt<=WRITE_CHK;
 				state_num_internal <= x"2";
 			when WRITE_CHK=>
 				rd <= '0';
-				wr <= '1';
+				wr <= '0';
 				if (addr_cnt_y = x"3FFFFF") then
 					state_nxt<=INIT_R;
 				else
@@ -143,6 +144,7 @@ begin
             when READ_S =>
                 rd <= '1';
                 wr <= '0';
+                be_n <= "00";
 				--we need to keep outputting current address if waitreq is high
 				if (waitreq='1') then
                     state_nxt<= READ_S;
@@ -151,7 +153,7 @@ begin
                 end if;
 				state_num_internal <= x"5";
             when READ_INC=>
-                rd <= '1';
+                rd <= '0';
                 wr <= '0';
                 if (addr_cnt_y = x"3FFFFF") then
                     state_nxt<= REST;
