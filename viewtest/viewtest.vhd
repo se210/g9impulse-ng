@@ -16,6 +16,7 @@ ENTITY viewtest IS
 		VGA_BLANK :  OUT  STD_LOGIC;
 		VGA_VS :  OUT  STD_LOGIC;
 		VGA_HS :  OUT  STD_LOGIC;
+        pixelval : OUT STD_LOGIC_VECTOR(15 DOWNTO 0);
 		LEDR :  OUT  STD_LOGIC_VECTOR(1 DOWNTO 0);
 		VGA_B :  OUT  STD_LOGIC_VECTOR(9 DOWNTO 8);
 		VGA_G :  OUT  STD_LOGIC_VECTOR(9 DOWNTO 8);
@@ -28,6 +29,7 @@ architecture behavioral of viewtest is
 
 signal wr : std_logic;
 signal pixel : std_logic_vector(15 downto 0);
+signal count : std_logic_vector(15 downto 0);
 signal visible : std_logic;
 signal vga_clk_in : std_logic;
 signal rst_i : std_logic;
@@ -37,7 +39,7 @@ signal full_i : std_logic;
 begin
 	u1: view
 	PORT MAP(Clk => CLOCK_50,
-			 Reset => rst_i,
+			 nReset => rst_i,
 			 wr => wr,
 			 field_color => SW(7 downto 0),
 			 pixel_data_in => pixel,
@@ -53,22 +55,24 @@ begin
 			 Red => VGA_R,
 			 visible_out => visible);
 	
-	u2: HexDriver
-	Port map( In0 => "000" & full_i,
-			  Out0 => HEX0);
+--	u2: HexDriver
+--	Port map( In0 => "000" & full_i,
+--			  Out0 => HEX0);
 			 
 VGA_CLK <= vga_clk_in;
 rst_i <= KEY(0);
 LEDR(0) <= eof_i;
 wr <= not full_i;
 			 
-generate_pixel : process (CLOCK_50,eof_i)
+count_pixel : process (CLOCK_50, eof_i, full_i, rst_i)
 begin
-	if(eof_i = '1') then
-		pixel <= x"0000";
-	elsif rising_edge(CLOCK_50) and visible='1' and full_i='0' then
-		pixel <= pixel+1;
+	if(eof_i = '1' or rst_i = '0') then
+		count <= x"0000";
+	elsif rising_edge(CLOCK_50) and full_i='0' then
+		count <= count+1;
 	end if;
 end process;
 
+    pixel <= x"FFFF" when count = SW else x"0000";
+    pixelval <= pixel;
 end;

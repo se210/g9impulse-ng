@@ -58,9 +58,12 @@ end process;
 --      Red   <= "0" & DrawX(4 downto 0) & "0000";
 --      Green <= "0" & DrawY(5 downto 0) & "000";
 --      Blue  <= '0' & DrawX(9 downto 1);
-		Red <= DrawX(1 downto 0);
-		Green <= DrawY(7 downto 6);
-		Blue <= DrawX(4 downto 3);
+--		Red <= DrawX(1 downto 0);
+--		Green <= DrawY(7 downto 6);
+--		Blue <= DrawX(4 downto 3);
+        Red <= "00";
+        Green <= "00";
+        Blue <= "00";
     end if;
   end process RGB_Display;
 
