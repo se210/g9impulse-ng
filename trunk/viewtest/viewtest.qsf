@@ -41,7 +41,7 @@ set_global_assignment -name DEVICE EP2C35F672C6
 set_global_assignment -name TOP_LEVEL_ENTITY viewtest
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION "9.1 SP2"
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "18:54:32  OCTOBER 30, 2010"
-set_global_assignment -name LAST_QUARTUS_VERSION "9.1 SP2"
+set_global_assignment -name LAST_QUARTUS_VERSION "10.0 SP1"
 set_global_assignment -name USE_GENERATED_PHYSICAL_CONSTRAINTS OFF -section_id eda_blast_fpga
 set_global_assignment -name DEVICE_FILTER_PIN_COUNT 672
 set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
@@ -477,13 +477,18 @@ set_location_assignment PIN_W25 -to GPIO_1[34]
 set_location_assignment PIN_W23 -to GPIO_1[35]
 set_global_assignment -name SIMULATION_MODE TIMING
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output
+set_global_assignment -name INCREMENTAL_VECTOR_INPUT_SOURCE viewtest.vwf
+set_global_assignment -name END_TIME "1 ms"
 set_global_assignment -name VHDL_FILE ram2port.vhd
-set_global_assignment -name VHDL_FILE Color_Mapper.vhd
 set_global_assignment -name VHDL_FILE fifo_cc.vhd
+set_global_assignment -name VHDL_FILE Color_Mapper.vhd
 set_global_assignment -name VHDL_FILE HexDriver.vhd
 set_global_assignment -name VHDL_FILE VGA_controller.vhd
 set_global_assignment -name VHDL_FILE view.vhd
 set_global_assignment -name VECTOR_WAVEFORM_FILE viewtest.vwf
-set_global_assignment -name INCREMENTAL_VECTOR_INPUT_SOURCE viewtest.vwf
 set_global_assignment -name VHDL_FILE viewtest.vhd
+set_global_assignment -name QIP_FILE ram2port.qip
+set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim-Altera (VHDL)"
+set_global_assignment -name EDA_OUTPUT_DATA_FORMAT VHDL -section_id eda_simulation
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
