@@ -273,6 +273,7 @@ begin
       NROWS        			  => NROWS,
       NCOLS        			  => NCOLS,
       HADDR_WIDTH  			  => ADDR_WIDTH,
+      IN_PHASE                => false,
       SADDR_WIDTH  			  => SADDR_WIDTH
       )
     port map(
@@ -383,7 +384,7 @@ begin
 	u6: view
 	port map ( 
            Clk => sdram_clk1x,
-           nReset => not rst_i,
+           nReset => pin_pushbtn,
            wr => sdram_rdDone,
            pixel_data_in => pixels,
            field_color => field_color_r,
@@ -403,9 +404,9 @@ begin
 --------------------------------------------------------------------------------------------------------------
 --Debugging Modules
 --------------------------------------------------------------------------------------------------------------
-	u7: HexDriver
-	port map ( In0 => "000" & sdram_rd,
-		   Out0 => hex0);
+--	u7: HexDriver
+--	port map ( In0 => "000" & sdram_rd,
+--		   Out0 => hex0);
 		   
 	u8: HexDriver
 	port map ( In0 => port_in(7 downto 4),
