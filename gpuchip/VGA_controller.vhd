@@ -25,25 +25,6 @@ use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.STD_LOGIC_ARITH.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
-package vga_controller_pckg is
-    component vga_controller is
-        Port (  clk       : in  std_logic;  -- 50 MHz clock
-                reset     : in  std_logic;  -- reset signal
-                hs        : out std_logic;  -- Horizontal sync pulse.  Active low
-                vs        : out std_logic;  -- Vertical sync pulse.  Active low
-                pixel_clk : out std_logic;  -- 25 MHz pixel clock
-                blank     : out std_logic;  -- Blanking interval indicator.  Active low.
-                sync      : out std_logic;  -- Composite Sync signal.  Active low.  We don't use it in this lab,
-                                            --   but the video DAC on the DE2 board requires an input for it.
-                DrawX     : out std_logic_vector(9 downto 0);   -- horizontal coordinate
-                DrawY     : out std_logic_vector(9 downto 0) ); -- vertical coordinate
-    end component vga_controller;
-end package vga_controller_pckg;
-
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.STD_LOGIC_ARITH.ALL;
-use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 entity vga_controller is
   Port ( clk       : in  std_logic;  -- 50 MHz clock

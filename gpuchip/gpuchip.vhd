@@ -26,9 +26,7 @@ use IEEE.std_logic_1164.all;
 use IEEE.std_logic_unsigned.all;
 use IEEE.numeric_std.all;
 use WORK.common.all;
---use WORK.xsasdram.all;
 use WORK.sdram.all;
---use WORK.vga_pckg.all;
 use WORK.blitter_pckg.all;
 use WORK.sdram_pll_pckg.all;
 use WORK.view_pckg.all;
@@ -42,7 +40,7 @@ entity gpuChip is
 		MULTIPLE_ACTIVE_ROWS:   boolean 					  := false;  -- if true, allow an active row in each bank
 		CLK_DIV         :       real						  := 1.0;  -- SDRAM Clock div
 		NROWS           :       natural                       := 4096;  -- number of rows in the SDRAM
-		NCOLS           :       natural                       := 256;  -- number of columns in each SDRAM row
+		NCOLS           :       natural                       := 512;  -- number of columns in each SDRAM row
 		SADDR_WIDTH 	 : 		natural						  := 12;
 	  	DATA_WIDTH      :       natural 					  := 16;  -- SDRAM databus width
 		ADDR_WIDTH      :       natural 					  := 24;  -- host-side address width
@@ -113,7 +111,7 @@ architecture arch of gpuChip is
 
 	type gpuState is (
 	 INIT,                           -- init
-    LOAD,
+	 LOAD,
 	 DRAW,
 	 REST                           
     );
@@ -134,7 +132,7 @@ architecture arch of gpuChip is
 	signal drawpending_x, drawpending_r			: std_logic;
 
 	--internal signals
-   signal sysReset 										: std_logic;  -- system reset
+    signal sysReset 										: std_logic;  -- system reset
 	signal blit_reset										: std_logic;
 	signal reset_blitter									: std_logic;
 
@@ -186,7 +184,7 @@ architecture arch of gpuChip is
 	-- VGA related signals
 	signal eof         									: std_logic;      -- end-of-frame signal from VGA controller
    signal full												: std_logic;      -- indicates when the VGA pixel buffer is full
-   signal vga_address      							: unsigned(ADDR_WIDTH-1 downto 0);  -- SDRAM address counter
+   signal vga_address      							: std_logic_vector(ADDR_WIDTH-1 downto 0);  -- SDRAM address counter
 	signal pixels											: std_logic_vector(DATA_WIDTH-1 downto 0);
 	signal rst_n											: std_logic;		--VGA reset (active low)
 	signal drawframe										: std_logic;  -- flag to indicate whether we are drawing current frame	
@@ -207,60 +205,58 @@ begin
  ------------------------------------------------------------------------
  -- Instantiate the dualport module
  ------------------------------------------------------------------------
-  u1 : dualport
-    generic map(
-      PIPE_EN         => PIPE_EN,
-      PORT_TIME_SLOTS => PORT_TIME_SLOTS,
-      DATA_WIDTH      => DATA_WIDTH,
-      HADDR_WIDTH     => ADDR_WIDTH
-      )
-    port map(
-      clk             => sdram_clk1x,
-
-		-- Memory Port 0 connections
-		rst0            => rst_i,
-      rd0             => rd0,
-      wr0             => wr0,
-      rdPending0      => rdPending0,
-      opBegun0        => opBegun0,
-      earlyOpBegun0   => earlyOpBegun0,
-      rdDone0         => rdDone0,
-      done0           => done0,
-      hAddr0          => hAddr0,
-      hDIn0           => hDIn0,
-      hDOut0          => hDOut0,
-      status0         => open,
-		
-		-- Memory Port 1 connections
-      rst1            => rst_i,
+--  u1 : dualport
+--    generic map(
+--      PIPE_EN         => PIPE_EN,
+--      PORT_TIME_SLOTS => PORT_TIME_SLOTS,
+--      DATA_WIDTH      => DATA_WIDTH,
+--      HADDR_WIDTH     => ADDR_WIDTH
+--      )
+--    port map(
+--      clk             => sdram_clk1x,
+--
+--		-- Memory Port 0 connections
+--		rst0            => rst_i,
+--      rd0             => rd0,
+--      wr0             => wr0,
+--      rdPending0      => rdPending0,
+--      opBegun0        => opBegun0,
+--      earlyOpBegun0   => earlyOpBegun0,
+--      rdDone0         => rdDone0,
+--      done0           => done0,
+--      hAddr0          => hAddr0,
+--      hDIn0           => hDIn0,
+--      hDOut0          => hDOut0,
+--      status0         => open,
+--		
+--		-- Memory Port 1 connections
+--      rst1            => rst_i,
 --      rd1             => rd1,
 --      wr1             => wr1,
-	  rd1 => '0',
-	  wr1 => '0',
-      rdPending1      => rdPending1,
-      opBegun1        => opBegun1,
-      earlyOpBegun1   => earlyOpBegun1,
-      rdDone1         => rdDone1,
-      done1           => done1,
-      hAddr1          => hAddr1,
-      hDIn1           => hDIn1,
-      hDOut1          => hDOut1,
-      status1         => open,
-      
-		-- connections to the SDRAM controller
-      rst             => sdram_rst,
-      rd              => sdram_rd,
-      wr              => sdram_wr,
-      rdPending       => sdram_rdPending,
-      opBegun         => sdram_opBegun,
-      earlyOpBegun    => sdram_earlyOpBegun,
-      rdDone          => sdram_rdDone,
-      done            => sdram_done,
-      hAddr           => sdram_hAddr,
-      hDIn            => sdram_hDIn,
-      hDOut           => sdram_hDOut,
-      status          => sdram_status
-      );
+--      rdPending1      => rdPending1,
+--      opBegun1        => opBegun1,
+--      earlyOpBegun1   => earlyOpBegun1,
+--      rdDone1         => rdDone1,
+--      done1           => done1,
+--      hAddr1          => hAddr1,
+--      hDIn1           => hDIn1,
+--      hDOut1          => hDOut1,
+--      status1         => open,
+--      
+--		-- connections to the SDRAM controller
+--      rst             => sdram_rst,
+--      rd              => sdram_rd,
+--      wr              => sdram_wr,
+--      rdPending       => sdram_rdPending,
+--      opBegun         => sdram_opBegun,
+--      earlyOpBegun    => sdram_earlyOpBegun,
+--      rdDone          => sdram_rdDone,
+--      done            => sdram_done,
+--      hAddr           => sdram_hAddr,
+--      hDIn            => sdram_hDIn,
+--      hDOut           => sdram_hDOut,
+--      status          => sdram_status
+--      );
 
  
   ------------------------------------------------------------------------
@@ -282,9 +278,6 @@ begin
     port map(
 	 	--Dual Port Controller (Host) Side
       clk          => sdram_clk1x,             -- master clock from external clock source (unbuffered)
---      bufclk       => sdram_bufclk,  		   -- buffered master clock output
---      clk1x        => sdram_clk1x,   		   -- synchronized master clock (accounts for delays to external SDRAM)
---      clk2x        => sdram_clk2x,     		-- synchronized doubled master clock
       lock         => sdram_lock,       		-- DLL lock indicator
       rst          => sdram_rst,        		-- reset
       rd           => sdram_rd,         		-- host-side SDRAM read control from dualport
@@ -300,8 +293,6 @@ begin
       status       => sdram_status,          -- SDRAM controller state (for diagnostics)
      
 	   --SDRAM (External) Side
---	  	sclkfb       => pin_sclkfb,           -- clock feedback with added external PCB delays
---      sclk         => pin_sclk,             -- synchronized clock to external SDRAM
       cke          => pin_cke,              -- SDRAM clock enable
       ce_n         => pin_cs_n,             -- SDRAM chip-select
       ras_n        => pin_ras_n,            -- SDRAM RAS
@@ -359,8 +350,10 @@ begin
   port map (	
     clk					 => sdram_clk1x,             
 	 rst					 => blit_reset,		 
- 	 rd           	 	 => rd1,      
-    wr                => wr1,       
+-- 	 rd           	 	 => rd1,      
+--    wr                => wr1,
+	rd => open,
+	wr => open,
     opBegun        	 => opBegun1,       
     earlyopBegun   	 => earlyOpBegun1,       
     done           	 => done1,
@@ -384,15 +377,14 @@ begin
 		inclk0		=> pin_clkin,
 		c0			=> pin_sclk,
 		c1			=> sdram_clk1x,
-		--c2			=> pin_vga_clk
 		c2 => open
 	);
 	
 	u6: view
 	port map ( 
-           Clk => pin_clkin,
-           Reset => not rst_i,
-           wr => rdDone0,
+           Clk => sdram_clk1x,
+           nReset => not rst_i,
+           wr => sdram_rdDone,
            pixel_data_in => pixels,
            field_color => field_color_r,
            
@@ -412,7 +404,7 @@ begin
 --Debugging Modules
 --------------------------------------------------------------------------------------------------------------
 	u7: HexDriver
-	port map ( In0 => port_in(3 downto 0),
+	port map ( In0 => "000" & sdram_rd,
 		   Out0 => hex0);
 		   
 	u8: HexDriver
@@ -446,168 +438,34 @@ begin
 -- End of Submodules
 --------------------------------------------------------------------------------------------------------------
 -- Begin Top Level Module
-
-	-- connect internal signals	
+	rst_i <= not pin_pushbtn;
+	sdram_rd <= not full;
+	sdram_wr <= '0';
+	sdram_lock <= '1';
+	sdram_hAddr <= vga_address;
+	sdram_hDIn <= x"0000";
+	pixels <= sdram_hDOut;
+	
+	rd1 <= '0';
+	wr1 <= '0';
+	pin_clkout <= sdram_clk1x;
+	pin_ce_n <= '1';						  -- disable Flash RAM
+	
 	
 	pin_red <= pin_red_in & x"00";
 	pin_green <= pin_green_in & x"00";
 	pin_blue <= pin_blue_in & x"00";
-	--pin_vga_sync <= '0';
 	
-	pin_clkout <= sdram_clk1x;
+	field_color_r <= x"06";
 	
-	rst_i <= sysReset;
-	pin_ce_n <= '1';						  -- disable Flash RAM
-	sdram_bufclk <= sdram_clk1x;
-  	
-	--rd0 <= ((not full) and drawframe); -- negate the full signal for use in controlling the SDRAM read operation
-	rd0 <= '1';
-	hDIn0 <= "0000000000000000"; 		  -- don't need to write to port 0 (VGA Port)
-	wr0 <= '0';
-	hAddr0 <= std_logic_vector(vga_address);
-	
-	blit_reset <= rst_i or reset_blitter;
 
-	-- Port0 is reserved for VGA
-	--pixels <= hDOut0 when drawframe = '1' else "0000000000000000";
-	--pixels <= pin_port_addr & pin_port_addr & pin_port_addr & pin_port_addr;
-	pixels <= hDOut0;
-
-	port_in   		<= pin_port_in;
-	port_addr 		<= pin_port_addr;
-	pin_done			<= idle_r;
-
-	source_address	<= source_address_r;
-	line_size		<= line_size_r;
-	target_address	<= target_address_r;
-	source_lines	<= source_lines_r;
-	alphaOp			<= alphaOp_r;
-	
-	front_buffer	<= front_buffer_r when db_enable_r = '1' else YES;	
-	not_fb			<= (not front_buffer_r) when db_enable_r = '1' else YES;
-
-	comb:process(state_r, port_in, port_addr, pin_start)
+	update: process(rst_i,eof, sdram_clk1x)
 	begin
-	  	blit_begin <= NO;						--default operations		
-		reset_blitter <= NO;
-		
-		state_x 				<= state_r;			 		--default register values
-	   source_address_x	<= source_address_r;
-		target_address_x 	<= target_address_r;
-		source_lines_x		<= source_lines_r;
-		line_size_x 		<= line_size_r;
-		alphaOp_x			<= alphaOp_r;
-		db_enable_x			<= db_enable_r;
-		front_buffer_x 	<= front_buffer_r;
-		field_color_x		<= field_color_r;
-		idle_x			 	<= idle_r;
-		drawpending_x		<= drawpending_r;
-			
-		case state_r is
-			when INIT =>
-				idle_x <= YES;
-				reset_blitter <= YES;
-				state_x <= LOAD;
-			
-			when LOAD =>
-				if (pin_load = YES) then
-					case port_addr is 
-						when "0000" => source_address_x(23 downto 16) <= port_in;			
-						when "0001" => source_address_x(15 downto 8)  <= port_in; 
-						when "0010" => source_address_x(7 downto  0)  <= port_in;			
-						when "0011" => target_address_x(23 downto 16) <= port_in;				
-						when "0100" => target_address_x(15 downto 8)  <= port_in;			
-						when "0101" => target_address_x(7 downto  0)  <= port_in;				
-						when "0110" => source_lines_x						 <= port_in;  			
-						when "0111" => line_size_x							 <= port_in;    			
-						when "1000" => alphaOp_x							 <= port_in(0);
-						when "1001" => db_enable_x 						 <= port_in(0);
-						when "1010" => front_buffer_x						 <= port_in(0);
-						when "1011"	=> field_color_x						 <= port_in;
-						when others =>
-					end case;				
-				end if;
-		
-				if (pin_start = YES) then
-					drawpending_x <= YES;
-					idle_x <= NO;
-				end if;
-				
-				if (drawpending_r = YES and drawframe = NO) then
-					drawpending_x <= NO;
-					state_x <= DRAW;
-				end if;
-				
-			when DRAW =>
-			   blit_begin <= YES;
-				if (blit_done = YES) then
-					reset_blitter <= YES;
-					idle_x <= YES;
-					state_x <= REST;
-				end if;
-
-			when REST =>
-				reset_blitter <= YES;
-				state_x <= LOAD;
-
-		end case;
-	end process;
-
-   -- update the SDRAM address counter
-   process(sdram_clk1x)
-   begin
-		if rising_edge(sdram_clk1x) then
-		
-		--VGA Related Stuff
-			if eof = YES then
-				drawframe <= not drawframe; 					 -- draw every other scan frame
-				
-				 -- reset the address at the end of a video frame depending on which buffer is the front
-				if (front_buffer = YES) then
-					vga_address <= x"000000";
-					--vga_address <= x"3A6390";
-				else
-					vga_address <= x"00E000";
-					--vga_address <= x"3A6390";
-				end if;
-					
-			elsif (earlyOpBegun0 = YES) then
-				vga_address <= vga_address + 1;           -- go to the next address once the read of the current address has begun
-			end if;
-	
-		
-			--reset stuff
-			if (sysReset = YES) then
-				field_color_r <= x"00";
-				state_r <= INIT;
-				field_color_r 		<= x"00";
-				state_r 				<= INIT;
-			end if;
-			
-			state_r 				<= state_x;
-			source_address_r	<= source_address_x;
-			target_address_r 	<= target_address_x;
-			source_lines_r		<= source_lines_x;
-			line_size_r 		<= line_size_x;
-			alphaOp_r			<= alphaOp_x;
-			front_buffer_r		<= front_buffer_x;
-			db_enable_r			<= db_enable_x;
-			field_color_r 		<= field_color_x;
-			idle_r		 		<= idle_x;
-			idle_r		 		<= idle_x;		
-			drawpending_r		<= drawpending_x;
-		end if;
-	end process;
-
-	--process reset circuitry
-	process(sdram_bufclk)
-	begin
-		if (rising_edge(sdram_bufclk)) then
-			if sdram_lock='0' then
-				sysReset <= '1';     -- keep in reset until DLLs start up
-			else
-				--sysReset <= '0';
-				sysReset <= not pin_pushbtn;  -- push button will reset
+		if(rst_i = '1' or eof = '1') then
+			vga_address <= x"000000";
+		elsif(rising_edge(sdram_clk1x)) then
+			if(sdram_earlyOpBegun = '1') then
+				vga_address <= vga_address + 1;
 			end if;
 		end if;
 	end process;

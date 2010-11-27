@@ -41,7 +41,7 @@ visible <= game_on;
 
 game_on_proc : process (DrawX, DrawY)
 begin
-	if((DrawX >= 0) and (DrawX < 320) and (DrawY < 240)) then
+	if((DrawX >= 0) and (DrawX < 320) and (DrawY >= 0) and (DrawY < 240)) then
 		game_on <= '1';
 	else
 		game_on <= '0';
@@ -58,9 +58,12 @@ end process;
 --      Red   <= "0" & DrawX(4 downto 0) & "0000";
 --      Green <= "0" & DrawY(5 downto 0) & "000";
 --      Blue  <= '0' & DrawX(9 downto 1);
-		Red <= DrawX(1 downto 0);
-		Green <= DrawY(7 downto 6);
-		Blue <= DrawX(4 downto 3);
+--		Red <= DrawX(1 downto 0);
+--		Green <= DrawY(7 downto 6);
+--		Blue <= DrawX(4 downto 3);
+        Red <= "01";
+        Green <= "00";
+        Blue <= "00";
     end if;
   end process RGB_Display;
 
