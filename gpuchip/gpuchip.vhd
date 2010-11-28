@@ -41,7 +41,7 @@ entity gpuChip is
 		CLK_DIV         :       real						  := 1.0;  -- SDRAM Clock div
 		NROWS           :       natural                       := 4096;  -- number of rows in the SDRAM
 		NCOLS           :       natural                       := 512;  -- number of columns in each SDRAM row
-		SADDR_WIDTH 	 : 		natural						  := 12;
+		SADDR_WIDTH 	:  		natural						  := 12;
 	  	DATA_WIDTH      :       natural 					  := 16;  -- SDRAM databus width
 		ADDR_WIDTH      :       natural 					  := 24;  -- host-side address width
 	 	VGA_CLK_DIV     :       natural 					  := 4;  -- pixel clock = FREQ / CLK_DIV
@@ -180,6 +180,11 @@ architecture arch of gpuChip is
 	signal sdram_hDOut  									: std_logic_vector(DATA_WIDTH -1 downto 0);	-- host-side data from SDRAM
 	signal sdram_status 									: std_logic_vector(3 downto 0);  -- SDRAM controller status
 
+    -- fifo signals
+    signal fifo_wr  : std_logic;
+
+    type fifo_wren_state is (REST, READY, DECREMENT, ZERO);
+    signal fifo_wren_r, fifo_wren_x : fifo_wren_state;
 
 	-- VGA related signals
 	signal eof         									: std_logic;      -- end-of-frame signal from VGA controller
@@ -273,14 +278,13 @@ begin
       NROWS        			  => NROWS,
       NCOLS        			  => NCOLS,
       HADDR_WIDTH  			  => ADDR_WIDTH,
-      IN_PHASE                => false,
       SADDR_WIDTH  			  => SADDR_WIDTH
       )
     port map(
 	 	--Dual Port Controller (Host) Side
       clk          => sdram_clk1x,             -- master clock from external clock source (unbuffered)
       lock         => sdram_lock,       		-- DLL lock indicator
-      rst          => sdram_rst,        		-- reset
+      rst          => rst_i,        		-- reset
       rd           => sdram_rd,         		-- host-side SDRAM read control from dualport
       wr           => sdram_wr,         		-- host-side SDRAM write control from dualport
       earlyOpBegun => sdram_earlyOpBegun,		-- early indicator that memory operation has begun 
@@ -343,35 +347,35 @@ begin
  
 	u4: Blitter
 	generic map(
-    FREQ              => FREQ, 
-    PIPE_EN           => PIPE_EN,
-  	 DATA_WIDTH        => DATA_WIDTH,
-    ADDR_WIDTH        => ADDR_WIDTH
-    )
-  port map (	
-    clk					 => sdram_clk1x,             
-	 rst					 => blit_reset,		 
--- 	 rd           	 	 => rd1,      
---    wr                => wr1,
-	rd => open,
-	wr => open,
-    opBegun        	 => opBegun1,       
-    earlyopBegun   	 => earlyOpBegun1,       
-    done           	 => done1,
-	 rddone		 	    => rddone1,      
-    rdPending		    => rdPending1,
-	 Addr              => hAddr1,    
-    DIn               => hDIn1,     
-    DOut              => hDOut1,     
-	 blit_begin		    => blit_begin,
-	 source_address    => source_address, 
-	 source_lines	    => source_lines,
-	 target_address    => target_address,
-	 line_size		    => line_size,
-	 alphaOp			    => alphaOp,
-	 blit_done		    => blit_done,
-	 front_buffer	    => not_fb
-	 );
+                   FREQ              => FREQ, 
+                   PIPE_EN           => PIPE_EN,
+                   DATA_WIDTH        => DATA_WIDTH,
+                   ADDR_WIDTH        => ADDR_WIDTH
+               )
+    port map (	
+                 clk					 => sdram_clk1x,             
+                 rst					 => blit_reset,		 
+                 -- 	 rd           	 	 => rd1,      
+                 --    wr                => wr1,
+                 rd => open,
+                 wr => open,
+                 opBegun        	 => opBegun1,       
+                 earlyopBegun   	 => earlyOpBegun1,       
+                 done           	 => done1,
+                 rddone		 	    => rddone1,      
+                 rdPending		    => rdPending1,
+                 Addr              => hAddr1,    
+                 DIn               => hDIn1,     
+                 DOut              => hDOut1,     
+                 blit_begin		    => blit_begin,
+                 source_address    => source_address, 
+                 source_lines	    => source_lines,
+                 target_address    => target_address,
+                 line_size		    => line_size,
+                 alphaOp			    => alphaOp,
+                 blit_done		    => blit_done,
+                 front_buffer	    => not_fb
+             );
 	 
 	 u5: sdram_pll
 	port map (
@@ -384,8 +388,8 @@ begin
 	u6: view
 	port map ( 
            Clk => sdram_clk1x,
-           nReset => pin_pushbtn,
-           wr => sdram_rdDone,
+           nReset => not rst_i,
+           wr => fifo_wr,
            pixel_data_in => pixels,
            field_color => field_color_r,
            
@@ -404,9 +408,9 @@ begin
 --------------------------------------------------------------------------------------------------------------
 --Debugging Modules
 --------------------------------------------------------------------------------------------------------------
---	u7: HexDriver
---	port map ( In0 => "000" & sdram_rd,
---		   Out0 => hex0);
+	u7: HexDriver
+	port map ( In0 => "000" & sdram_rd,
+		   Out0 => hex0);
 		   
 	u8: HexDriver
 	port map ( In0 => port_in(7 downto 4),
@@ -459,15 +463,55 @@ begin
 	
 	field_color_r <= x"06";
 	
+    calc_fifo_rw : process (fifo_wren_r, sdram_opBegun, sdram_rdPending)
+    begin
+        fifo_wren_x <= fifo_wren_r;
 
-	update: process(rst_i,eof, sdram_clk1x)
-	begin
-		if(rst_i = '1' or eof = '1') then
-			vga_address <= x"000000";
-		elsif(rising_edge(sdram_clk1x)) then
-			if(sdram_earlyOpBegun = '1') then
-				vga_address <= vga_address + 1;
-			end if;
-		end if;
-	end process;
+        case fifo_wren_r is
+            when REST =>
+                if (sdram_opBegun = '0' and sdram_rdPending = '1') then
+                    fifo_wren_x <= READY;
+                end if;
+            when READY =>
+                fifo_wren_x <= DECREMENT;
+            when DECREMENT =>
+                fifo_wren_x <= ZERO;
+            when ZERO =>
+                if (sdram_opBegun = '1') then
+                    fifo_wren_x <= REST;
+                end if;
+            when others =>
+                NULL;
+        end case;
+    end process calc_fifo_rw;
+
+    update : process (sdram_clk1x, rst_i)
+    begin
+        if (rst_i = '1') then
+            fifo_wren_r <= REST;
+        elsif (rising_edge(sdram_clk1x)) then
+            fifo_wren_r <= fifo_wren_x;
+        end if;
+    end process update;
+
+    fifo_wr <= '1' when sdram_rdDone = '1' and fifo_wren_r /= ZERO else '0';
+
+    increment_addr : process (sdram_clk1x, rst_i, sdram_earlyOpBegun, sdram_opBegun, sdram_rdPending)
+    begin
+        if (rst_i = '1' or eof = '1') then
+            vga_address <= (others => '0');
+        elsif (rising_edge(sdram_clk1x)) then
+            if (sdram_earlyOpBegun = '1') then
+                if (sdram_opBegun = '1' and sdram_rdPending = '0') then
+                    vga_address <= vga_address;
+                else
+                    vga_address <= vga_address + 1;
+                end if;
+            else
+                vga_address <= vga_address;
+            end if;
+        else
+            vga_address <= vga_address;
+        end if;
+    end process increment_addr;
 end arch;
