@@ -177,6 +177,8 @@ architecture arch of gpuChip is
     signal sdram_valid                                      : std_logic;
     signal sdram_waitrequest                                : std_logic;
     signal sdram_dqm_i                                      : std_logic_vector(1 downto 0);
+    
+    signal hex_rd : std_logic_vector(3 downto 0);
 
 
 	-- VGA related signals
@@ -307,7 +309,7 @@ begin
     u2 : sdram_0
     port map (
                 clk => sdram_clk1x,
-                reset_n => pin_pushbtn,
+                reset_n => '1',
                 az_addr => sdram_hAddr,
                 az_be_n => "00",
                 az_cs => '1',
@@ -460,19 +462,21 @@ begin
 	port map ( In0 => std_logic_vector(vga_address(19 downto 16)),
 			Out0 => hex6);
 			
---	u14: HexDriver
---	port map ( In0 => std_logic_vector(vga_address(23 downto 20)),
---			Out0 => hex7);
+	u14: HexDriver
+	port map ( In0 => hex_rd,
+			Out0 => hex7);
 --------------------------------------------------------------------------------------------------------------
 -- End of Submodules
 --------------------------------------------------------------------------------------------------------------
 -- Begin Top Level Module
 	rst_i <= not pin_pushbtn;
-	sdram_rd <= not full;
+	sdram_rd <= (not full) and (not sdram_waitrequest);
 	sdram_wr <= '0';
 	sdram_hAddr <= vga_address;
 	sdram_hDIn <= x"0000";
 	pixels <= sdram_hDOut;
+	
+	hex_rd <= "000"&sdram_rd;
 	
 	rd1 <= '0';
 	wr1 <= '0';
@@ -484,15 +488,15 @@ begin
 	pin_green <= pin_green_in & x"00";
 	pin_blue <= pin_blue_in & x"00";
 	
-	field_color_r <= x"06";
+	field_color_r <= x"02";
 	
 
-	update: process(rst_i,eof, sdram_clk1x)
+	update: process(rst_i,eof, sdram_rd, sdram_clk1x)
 	begin
 		if(rst_i = '1' or eof = '1') then
-			vga_address <= "00"&x"00000";
+			vga_address <= (others=>'0');
 		elsif(rising_edge(sdram_clk1x)) then
-			if(sdram_waitrequest = '0') then
+			if(sdram_waitrequest = '0' and sdram_rd = '1') then
 				vga_address <= vga_address + 1;
 			end if;
 		end if;
