@@ -674,7 +674,7 @@ begin
       za_valid <= std_logic'('0');
     elsif clk'event and clk = '1' then
       if true then 
-        za_valid <= rd_valid(2);
+        za_valid <= rd_valid(1);
       end if;
     end if;
 
