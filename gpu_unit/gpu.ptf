@@ -2308,7 +2308,7 @@ SYSTEM gpu
       WIZARD_SCRIPT_ARGUMENTS 
       {
          register_data_in = "1";
-         sim_model_base = "0";
+         sim_model_base = "1";
          sdram_data_width = "16";
          sdram_addr_width = "12";
          sdram_row_width = "12";
@@ -2331,6 +2331,29 @@ SYSTEM gpu
          tristate_bridge_slave = "";
          starvation_indicator = "0";
          is_initialized = "1";
+         MAKE 
+         {
+            TARGET delete_placeholder_warning
+            {
+               sdram_0 
+               {
+                  Command1 = "rm -f $(SIMDIR)/contents_file_warning.txt";
+                  Is_Phony = "1";
+                  Target_File = "do_delete_placeholder_warning";
+               }
+            }
+            TARGET sim
+            {
+               sdram_0 
+               {
+                  Command1 = "if [ ! -d $(SIMDIR) ]; then mkdir $(SIMDIR) ; fi";
+                  Command2 = "@echo Hardware simulation is not enabled for the target SOPC Builder system. Skipping creation of hardware simulation model contents and simulation symbol files. \\(Note: This does not affect the instruction set simulator.\\)";
+                  Command3 = "touch $(SIMDIR)/dummy_file";
+                  Dependency = "$(ELF)";
+                  Target_File = "$(SIMDIR)/dummy_file";
+               }
+            }
+         }
       }
       SIMULATION 
       {
@@ -2513,6 +2536,69 @@ SYSTEM gpu
             }
          }
          Fix_Me_Up = "";
+         PORT_WIRING 
+         {
+            PORT clk
+            {
+               Is_Enabled = "1";
+               direction = "input";
+               width = "1";
+            }
+            PORT zs_addr
+            {
+               Is_Enabled = "1";
+               direction = "input";
+               width = "12";
+            }
+            PORT zs_ba
+            {
+               Is_Enabled = "1";
+               direction = "input";
+               width = "2";
+            }
+            PORT zs_cas_n
+            {
+               Is_Enabled = "1";
+               direction = "input";
+               width = "1";
+            }
+            PORT zs_cke
+            {
+               Is_Enabled = "1";
+               direction = "input";
+               width = "1";
+            }
+            PORT zs_cs_n
+            {
+               Is_Enabled = "1";
+               direction = "input";
+               width = "1";
+            }
+            PORT zs_dq
+            {
+               Is_Enabled = "1";
+               direction = "inout";
+               width = "16";
+            }
+            PORT zs_dqm
+            {
+               Is_Enabled = "1";
+               direction = "input";
+               width = "2";
+            }
+            PORT zs_ras_n
+            {
+               Is_Enabled = "1";
+               direction = "input";
+               width = "1";
+            }
+            PORT zs_we_n
+            {
+               Is_Enabled = "1";
+               direction = "input";
+               width = "1";
+            }
+         }
       }
       SYSTEM_BUILDER_INFO 
       {
@@ -2540,7 +2626,7 @@ SYSTEM gpu
       {
          Precompiled_Simulation_Library_Files = "";
          Simulation_HDL_Files = "";
-         Synthesis_HDL_Files = "__PROJECT_DIRECTORY__/sdram_0.vhd";
+         Synthesis_HDL_Files = "__PROJECT_DIRECTORY__/sdram_0.vhd, __PROJECT_DIRECTORY__/sdram_0_test_component.vhd";
          Synthesis_Only_Files = "";
       }
    }

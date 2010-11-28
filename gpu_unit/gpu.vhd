@@ -4357,6 +4357,24 @@ component gpu is
                  );
 end component gpu;
 
+component sdram_0_test_component is 
+           port (
+                 -- inputs:
+                    signal clk : IN STD_LOGIC;
+                    signal zs_addr : IN STD_LOGIC_VECTOR (11 DOWNTO 0);
+                    signal zs_ba : IN STD_LOGIC_VECTOR (1 DOWNTO 0);
+                    signal zs_cas_n : IN STD_LOGIC;
+                    signal zs_cke : IN STD_LOGIC;
+                    signal zs_cs_n : IN STD_LOGIC;
+                    signal zs_dqm : IN STD_LOGIC_VECTOR (1 DOWNTO 0);
+                    signal zs_ras_n : IN STD_LOGIC;
+                    signal zs_we_n : IN STD_LOGIC;
+
+                 -- outputs:
+                    signal zs_dq : INOUT STD_LOGIC_VECTOR (15 DOWNTO 0)
+                 );
+end component sdram_0_test_component;
+
                 signal clk :  STD_LOGIC;
                 signal clk_0 :  STD_LOGIC;
                 signal in_port_to_the_Switches :  STD_LOGIC_VECTOR (7 DOWNTO 0);
@@ -4398,6 +4416,22 @@ begin
       clk_0 => clk_0,
       in_port_to_the_Switches => in_port_to_the_Switches,
       reset_n => reset_n
+    );
+
+
+  --the_sdram_0_test_component, which is an e_instance
+  the_sdram_0_test_component : sdram_0_test_component
+    port map(
+      zs_dq => zs_dq_to_and_from_the_sdram_0,
+      clk => clk_0,
+      zs_addr => zs_addr_from_the_sdram_0,
+      zs_ba => zs_ba_from_the_sdram_0,
+      zs_cas_n => zs_cas_n_from_the_sdram_0,
+      zs_cke => zs_cke_from_the_sdram_0,
+      zs_cs_n => zs_cs_n_from_the_sdram_0,
+      zs_dqm => zs_dqm_from_the_sdram_0,
+      zs_ras_n => zs_ras_n_from_the_sdram_0,
+      zs_we_n => zs_we_n_from_the_sdram_0
     );
 
 
