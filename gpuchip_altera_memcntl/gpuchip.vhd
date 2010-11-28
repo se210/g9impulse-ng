@@ -168,8 +168,11 @@ architecture arch of gpuChip is
 	signal sdram_clk2x  									: std_logic;		-- doubled clock
 	signal sdram_lock  									: std_logic;    -- SDRAM clock DLL lock indicator
 	signal sdram_rst    									: std_logic;    -- internal reset signal
+	signal sdram_rst_n  									: std_logic;    -- internal reset signal inverted
 	signal sdram_rd     									: std_logic;    -- host-side read control signal
 	signal sdram_wr     									: std_logic;    -- host-side write control signal
+	signal sdram_rd_n   									: std_logic;    -- host-side read control signal inverted
+	signal sdram_wr_n   									: std_logic;    -- host-side write control signal inverted
 	signal sdram_earlyOpBegun							: std_logic;
 	signal sdram_OpBegun									: std_logic;
 	signal sdram_rdPending								: std_logic;
@@ -179,6 +182,10 @@ architecture arch of gpuChip is
 	signal sdram_hDIn   									: std_logic_vector(DATA_WIDTH -1 downto 0);	-- host-side data to SDRAM
 	signal sdram_hDOut  									: std_logic_vector(DATA_WIDTH -1 downto 0);	-- host-side data from SDRAM
 	signal sdram_status 									: std_logic_vector(3 downto 0);  -- SDRAM controller status
+
+    signal sdram_valid                                      : std_logic;
+    signal sdram_waitrequest                                : std_logic;
+    signal sdram_dqm_i                                      : std_logic_vector(1 downto 0);
 
 
 	-- VGA related signals
@@ -263,48 +270,78 @@ begin
   -- Instantiate the SDRAM controller that connects to the dualport
   -- module and interfaces to the external SDRAM chip.
   ------------------------------------------------------------------------
-  u2 : sdramCntl
-    generic map(
-      FREQ       				  => FREQ,
---      CLK_DIV    				  => CLK_DIV,
-      PIPE_EN     		     => PIPE_EN,
-      MULTIPLE_ACTIVE_ROWS   => MULTIPLE_ACTIVE_ROWS,
-		DATA_WIDTH  			  => DATA_WIDTH,
-      NROWS        			  => NROWS,
-      NCOLS        			  => NCOLS,
-      HADDR_WIDTH  			  => ADDR_WIDTH,
-      IN_PHASE                => false,
-      SADDR_WIDTH  			  => SADDR_WIDTH
-      )
-    port map(
-	 	--Dual Port Controller (Host) Side
-      clk          => sdram_clk1x,             -- master clock from external clock source (unbuffered)
-      lock         => sdram_lock,       		-- DLL lock indicator
-      rst          => sdram_rst,        		-- reset
-      rd           => sdram_rd,         		-- host-side SDRAM read control from dualport
-      wr           => sdram_wr,         		-- host-side SDRAM write control from dualport
-      earlyOpBegun => sdram_earlyOpBegun,		-- early indicator that memory operation has begun 
-		opBegun      => sdram_opBegun,       	-- indicates memory read/write has begun
-		rdPending    => sdram_rdPending,   		-- read operation to SDRAM is in progress
-      done         => sdram_done,        		-- indicates SDRAM memory read or write operation is done
-      rdDone       => sdram_rdDone,      		-- indicates SDRAM memory read operation is done
-      hAddr        => sdram_hAddr,           -- host-side address from dualport to SDRAM
-      hDIn         => sdram_hDIn,            -- test data pattern from dualport to SDRAM
-      hDOut        => sdram_hDOut,           -- SDRAM data output to dualport
-      status       => sdram_status,          -- SDRAM controller state (for diagnostics)
+  -- u2 : sdramCntl
+    -- generic map(
+      -- FREQ       				  => FREQ,
+-- --      CLK_DIV    				  => CLK_DIV,
+      -- PIPE_EN     		     => PIPE_EN,
+      -- MULTIPLE_ACTIVE_ROWS   => MULTIPLE_ACTIVE_ROWS,
+		-- DATA_WIDTH  			  => DATA_WIDTH,
+      -- NROWS        			  => NROWS,
+      -- NCOLS        			  => NCOLS,
+      -- HADDR_WIDTH  			  => ADDR_WIDTH,
+      -- IN_PHASE                => false,
+      -- SADDR_WIDTH  			  => SADDR_WIDTH
+      -- )
+    -- port map(
+		 -- --Dual Port Controller (Host) Side
+      -- clk          => sdram_clk1x,             -- master clock from external clock source (unbuffered)
+      -- lock         => sdram_lock,       		-- DLL lock indicator
+      -- rst          => sdram_rst,        		-- reset
+      -- rd           => sdram_rd,         		-- host-side SDRAM read control from dualport
+      -- wr           => sdram_wr,         		-- host-side SDRAM write control from dualport
+      -- earlyOpBegun => sdram_earlyOpBegun,		-- early indicator that memory operation has begun 
+		-- opBegun      => sdram_opBegun,       	-- indicates memory read/write has begun
+		-- rdPending    => sdram_rdPending,   		-- read operation to SDRAM is in progress
+      -- done         => sdram_done,        		-- indicates SDRAM memory read or write operation is done
+      -- rdDone       => sdram_rdDone,      		-- indicates SDRAM memory read operation is done
+      -- hAddr        => sdram_hAddr,           -- host-side address from dualport to SDRAM
+      -- hDIn         => sdram_hDIn,            -- test data pattern from dualport to SDRAM
+      -- hDOut        => sdram_hDOut,           -- SDRAM data output to dualport
+      -- status       => sdram_status,          -- SDRAM controller state (for diagnostics)
      
-	   --SDRAM (External) Side
-      cke          => pin_cke,              -- SDRAM clock enable
-      ce_n         => pin_cs_n,             -- SDRAM chip-select
-      ras_n        => pin_ras_n,            -- SDRAM RAS
-      cas_n        => pin_cas_n,            -- SDRAM CAS
-      we_n         => pin_we_n,             -- SDRAM write-enable
-      ba           => pin_ba,               -- SDRAM bank address
-      sAddr        => pin_sAddr,            -- SDRAM address
-      sData        => pin_sData,            -- SDRAM databus
-      dqmh         => pin_dqmh,             -- SDRAM DQMH
-      dqml         => pin_dqml              -- SDRAM DQML
-      );
+	   -- --SDRAM (External) Side
+      -- cke          => pin_cke,              -- SDRAM clock enable
+      -- ce_n         => pin_cs_n,             -- SDRAM chip-select
+      -- ras_n        => pin_ras_n,            -- SDRAM RAS
+      -- cas_n        => pin_cas_n,            -- SDRAM CAS
+      -- we_n         => pin_we_n,             -- SDRAM write-enable
+      -- ba           => pin_ba,               -- SDRAM bank address
+      -- sAddr        => pin_sAddr,            -- SDRAM address
+      -- sData        => pin_sData,            -- SDRAM databus
+      -- dqmh         => pin_dqmh,             -- SDRAM DQMH
+      -- dqml         => pin_dqml              -- SDRAM DQML
+      -- );
+
+    u2 : sdram_0
+    port map (
+                clk => sdram_clk1x,
+                reset_n => sdram_rst_n,
+                az_addr => sdram_hAddr,
+                az_be_n => "00",
+                az_cs => '1',
+                az_data => hDIn,
+                az_rd_n => sdram_rd_n,
+                az_wr_n => sdram_wr_n,
+
+                za_data => pin_sData,
+                za_valid => sdram_valid,
+                za_waitrequest => sdram_waitrequest,
+                zs_addr => pin_sAddr,
+                zs_ba => pin_ba,
+                zs_cas_n => pin_cas_n,
+                zs_cke => pin_cke,
+                zs_cs_n => pin_cs_n,
+                zs_dq => pin_sData,
+                zs_dqm => sdram_dqm_i,
+                zs_ras_n => pin_ras_n,
+                zs_we_n => pin_we_n
+             );
+    sdram_rst_n <= not sdram_rst;
+    sdram_rd_n <= not sdram_rd;
+    sdram_wr_n <= not sdram_wr;
+    pin_dqmh <= sdram_dqm_i(1);
+    pin_dqml <= sdram_dqm_i(0);
 
 ------------------------------------------------------------------------------------------------------------
 -- Instance of VGA driver, this unit generates the video signals from VRAM
