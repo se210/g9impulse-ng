@@ -27,7 +27,7 @@ use IEEE.std_logic_unsigned.all;
 use IEEE.numeric_std.all;
 use WORK.common.all;
 use WORK.sdram.all;
-use WORK.blitter_pckg.all;
+use WORK.Blitter_pckg.all;
 use WORK.sdram_pll_pckg.all;
 use WORK.view_pckg.all;
 use WORK.HexDriver_pckg.all;
@@ -309,7 +309,7 @@ begin
     u2 : sdram_0
     port map (
                 clk => sdram_clk1x,
-                reset_n => '1',
+                reset_n => pin_pushbtn,
                 az_addr => sdram_hAddr,
                 az_be_n => "00",
                 az_cs => '1',
@@ -434,9 +434,9 @@ begin
 --------------------------------------------------------------------------------------------------------------
 --Debugging Modules
 --------------------------------------------------------------------------------------------------------------
---	u7: HexDriver
---	port map ( In0 => "000" & sdram_rd,
---		   Out0 => hex0);
+	u7: HexDriver
+	port map ( In0 => hex_rd,
+		   Out0 => hex0);
 		   
 	u8: HexDriver
 	port map ( In0 => port_in(7 downto 4),
@@ -462,21 +462,21 @@ begin
 	port map ( In0 => std_logic_vector(vga_address(19 downto 16)),
 			Out0 => hex6);
 			
-	u14: HexDriver
-	port map ( In0 => hex_rd,
-			Out0 => hex7);
+--	u14: HexDriver
+--	port map ( In0 => "00"&vga_address(21 downto 20),
+--			Out0 => hex7);
 --------------------------------------------------------------------------------------------------------------
 -- End of Submodules
 --------------------------------------------------------------------------------------------------------------
 -- Begin Top Level Module
 	rst_i <= not pin_pushbtn;
-	sdram_rd <= (not full) and (not sdram_waitrequest);
+	sdram_rd <= (not full);
 	sdram_wr <= '0';
 	sdram_hAddr <= vga_address;
 	sdram_hDIn <= x"0000";
 	pixels <= sdram_hDOut;
 	
-	hex_rd <= "000"&sdram_rd;
+	hex_rd <= "000"&not sdram_rd;
 	
 	rd1 <= '0';
 	wr1 <= '0';
@@ -491,13 +491,17 @@ begin
 	field_color_r <= x"02";
 	
 
-	update: process(rst_i,eof, sdram_rd, sdram_clk1x)
+	update: process(rst_i,eof, sdram_rd, sdram_waitrequest, sdram_clk1x)
 	begin
 		if(rst_i = '1' or eof = '1') then
 			vga_address <= (others=>'0');
 		elsif(rising_edge(sdram_clk1x)) then
-			if(sdram_waitrequest = '0' and sdram_rd = '1') then
-				vga_address <= vga_address + 1;
+			if(sdram_waitrequest = '0' and full = '0') then
+				if(vga_address = "00"&x"000A") then
+					vga_address <= (others=>'0');
+				else
+					vga_address <= vga_address + 1;
+				end if;
 			end if;
 		end if;
 	end process;
