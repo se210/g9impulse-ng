@@ -158,9 +158,6 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_arith.all;
 use ieee.std_logic_unsigned.all;
 
-library std;
-use std.textio.all;
-
 entity sdram_0 is 
         port (
               -- inputs:
@@ -688,43 +685,6 @@ begin
   --vhdl renameroo for output signals
   za_waitrequest <= internal_za_waitrequest;
 --synthesis translate_off
-    process
-VARIABLE write_line : line;
-VARIABLE write_line1 : line;
-VARIABLE write_line2 : line;
-VARIABLE write_line3 : line;
-VARIABLE write_line4 : line;
-VARIABLE write_line5 : line;
-VARIABLE write_line6 : line;
-VARIABLE write_line7 : line;
-
-      begin
-        write(write_line, string'("This reference design requires a vendor simulation model."));
-        write(output, write_line.all & CR);
-        deallocate (write_line);
-        write(write_line1, string'("To simulate accesses to SDRAM, you must:"));
-        write(output, write_line1.all & CR);
-        deallocate (write_line1);
-        write(write_line2, string'("      - Download the vendor model"));
-        write(output, write_line2.all & CR);
-        deallocate (write_line2);
-        write(write_line3, string'("      - Install the model in the system_sim directory"));
-        write(output, write_line3.all & CR);
-        deallocate (write_line3);
-        write(write_line4, string'("      - Add the vendor file to the list of files passed to 'vcom' in setup_sim.do"));
-        write(output, write_line4.all & CR);
-        deallocate (write_line4);
-        write(write_line5, string'("      - Instantiate sdram simulation models and wire them to testbench signals"));
-        write(output, write_line5.all & CR);
-        deallocate (write_line5);
-        write(write_line6, string'("      - Be aware that you may have to disable some timing checks in the vendor model"));
-        write(output, write_line6.all & CR);
-        deallocate (write_line6);
-        write(write_line7, string'("             (because this simulation is zero-delay based)"));
-        write(output, write_line7.all & CR);
-        deallocate (write_line7);
-      wait;
-    end process;
     txt_code <= A_WE_StdLogicVector(((cmd_code = std_logic_vector'("000"))), std_logic_vector'("010011000100110101010010"), A_WE_StdLogicVector(((cmd_code = std_logic_vector'("001"))), std_logic_vector'("010000010101001001000110"), A_WE_StdLogicVector(((cmd_code = std_logic_vector'("010"))), std_logic_vector'("010100000101001001000101"), A_WE_StdLogicVector(((cmd_code = std_logic_vector'("011"))), std_logic_vector'("010000010100001101010100"), A_WE_StdLogicVector(((cmd_code = std_logic_vector'("100"))), std_logic_vector'("001000000101011101010010"), A_WE_StdLogicVector(((cmd_code = std_logic_vector'("101"))), std_logic_vector'("001000000101001001000100"), A_WE_StdLogicVector(((cmd_code = std_logic_vector'("110"))), std_logic_vector'("010000100101001101010100"), A_WE_StdLogicVector(((cmd_code = std_logic_vector'("111"))), std_logic_vector'("010011100100111101010000"), std_logic_vector'("010000100100000101000100")))))))));
     CODE <= A_WE_StdLogicVector((std_logic'(and_reduce(((cmd_all OR std_logic_vector'("0111"))))) = '1'), std_logic_vector'("010010010100111001001000"), txt_code);
 --synthesis translate_on

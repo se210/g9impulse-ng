@@ -10,12 +10,12 @@
  </systemtable>
  <clocktable>
   <columns>
-   <clockname preferredWidth="138" />
-   <clocksource preferredWidth="138" />
-   <frequency preferredWidth="119" />
+   <clockname preferredWidth="230" />
+   <clocksource preferredWidth="229" />
+   <frequency preferredWidth="211" />
   </columns>
  </clocktable>
- <window width="900" height="600" x="420" y="125" />
+ <window width="1177" height="838" x="420" y="125" />
  <library
    expandedCategories="Library/Memories and Memory Controllers,Project,Library/Memories and Memory Controllers/SDRAM,Library" />
 </preferences>

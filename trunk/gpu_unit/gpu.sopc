@@ -102,14 +102,6 @@
          type = "long";
       }
    }
-   element Switches.s1
-   {
-      datum baseAddress
-      {
-         value = "16789504";
-         type = "long";
-      }
-   }
    element LEDs.s1
    {
       datum baseAddress
@@ -126,6 +118,14 @@
          type = "long";
       }
    }
+   element Switches.s1
+   {
+      datum baseAddress
+      {
+         value = "16789504";
+         type = "long";
+      }
+   }
    element sdram_0
    {
       datum _sortIndex
@@ -135,7 +135,7 @@
       }
       datum megawizard_uipreferences
       {
-         value = "{output_language=VHDL, output_directory=C:\\Users\\SEJOON\\Desktop\\g9impulse-ng\\gpu_unit}";
+         value = "{}";
          type = "String";
       }
    }
@@ -148,8 +148,8 @@
  <parameter name="hdlLanguage" value="VHDL" />
  <parameter name="projectName" value="g9_gpu.qpf" />
  <parameter name="sopcBorderPoints" value="true" />
- <parameter name="systemHash" value="-12311420833" />
- <parameter name="timeStamp" value="1285710125257" />
+ <parameter name="systemHash" value="-10055464914" />
+ <parameter name="timeStamp" value="1286750664561" />
  <module kind="clock_source" version="10.0" enabled="1" name="clk_0">
   <parameter name="clockFrequency" value="50000000" />
   <parameter name="clockFrequencyKnown" value="true" />
@@ -322,7 +322,7 @@
   <parameter name="clockRate" value="50000000" />
   <parameter name="columnWidth" value="8" />
   <parameter name="dataWidth" value="16" />
-  <parameter name="generateSimulationModel" value="false" />
+  <parameter name="generateSimulationModel" value="true" />
   <parameter name="initNOPDelay" value="0.0" />
   <parameter name="initRefreshCommands" value="2" />
   <parameter name="masteredTristateBridgeSlave" value="" />
