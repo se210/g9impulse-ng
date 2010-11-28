@@ -307,10 +307,10 @@ begin
     u2 : sdram_0
     port map (
                 clk => sdram_clk1x,
-                reset_n => sdram_rst_n,
+                reset_n => pin_pushbtn,
                 az_addr => sdram_hAddr,
                 az_be_n => "00",
-                az_cs => '0',
+                az_cs => '1',
                 az_data => sdram_hDIn,              --Input port on the memory controller
                 az_rd_n => sdram_rd_n,
                 az_wr_n => sdram_wr_n,
