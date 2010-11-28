@@ -27,7 +27,7 @@ use IEEE.std_logic_unsigned.all;
 use IEEE.numeric_std.all;
 use WORK.common.all;
 use WORK.sdram.all;
-use WORK.Blitter_pckg.all;
+--use WORK.Blitter_pckg.all;
 use WORK.sdram_pll_pckg.all;
 use WORK.view_pckg.all;
 use WORK.HexDriver_pckg.all;
@@ -497,11 +497,15 @@ begin
 			vga_address <= (others=>'0');
 		elsif(rising_edge(sdram_clk1x)) then
 			if(sdram_waitrequest = '0' and full = '0') then
-				if(vga_address = "00"&x"000A") then
-					vga_address <= (others=>'0');
-				else
+			--if(sdram_valid='1') then
+				--if(vga_address = "00"&x"09600") then
+					--vga_address <= (others=>'0');
+				--else
 					vga_address <= vga_address + 1;
-				end if;
+				--end if;
+				--vga_address <= (others=>'0');
+			--else
+				--vga_address <= (others=>'0');
 			end if;
 		end if;
 	end process;

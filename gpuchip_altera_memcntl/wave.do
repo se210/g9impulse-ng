@@ -21,7 +21,11 @@ add wave -noupdate -format Logic /gpuchip_sim/gpu/sdram_rd
 add wave -noupdate -format Logic /gpuchip_sim/gpu/visible
 add wave -noupdate -format Literal -radix unsigned /gpuchip_sim/gpu/u6/fifo_level
 add wave -noupdate -format Logic /gpuchip_sim/gpu/u6/fifo/empty
+add wave -noupdate -format Logic /gpuchip_sim/gpu/u6/rst
 add wave -noupdate -format Logic /gpuchip_sim/gpu/u6/fifo/wr
+add wave -noupdate -format Logic /gpuchip_sim/gpu/u6/read_pixel_r
+add wave -noupdate -format Literal -radix hexadecimal /gpuchip_sim/gpu/u6/pixel_data_in
+add wave -noupdate -format Literal -radix hexadecimal /gpuchip_sim/gpu/u6/pixel_data_out
 add wave -noupdate -format Literal -radix hexadecimal /gpuchip_sim/gpu/sdram_hdout
 add wave -noupdate -format Literal /gpuchip_sim/gpu/sdram_hdin
 add wave -noupdate -format Logic /gpuchip_sim/gpu/sdram_valid
@@ -38,7 +42,7 @@ add wave -noupdate -format Logic /gpuchip_sim/gpu/u2/zs_cs_n
 add wave -noupdate -format Literal /gpuchip_sim/gpu/u2/zs_dqm
 add wave -noupdate -format Logic /gpuchip_sim/gpu/u2/zs_we_n
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {227231740 ps} 0}
+WaveRestoreCursors {{Cursor 1} {400530000 ps} 0}
 configure wave -namecolwidth 307
 configure wave -valuecolwidth 120
 configure wave -justifyvalue left
@@ -53,4 +57,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {0 ps} {1050 us}
+WaveRestoreZoom {400478512 ps} {400991216 ps}
