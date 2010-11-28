@@ -43,7 +43,7 @@ entity gpuChip is
 		NCOLS           :       natural                       := 512;  -- number of columns in each SDRAM row
 		SADDR_WIDTH 	 : 		natural						  := 12;
 	  	DATA_WIDTH      :       natural 					  := 16;  -- SDRAM databus width
-		ADDR_WIDTH      :       natural 					  := 24;  -- host-side address width
+		ADDR_WIDTH      :       natural 					  := 22;  -- host-side address width
 	 	VGA_CLK_DIV     :       natural 					  := 4;  -- pixel clock = FREQ / CLK_DIV
 		PIXEL_WIDTH     :       natural 					  := 8;  -- width of a pixel in memory
     	NUM_RGB_BITS    :       natural 					  := 2;  -- #bits in each R,G,B component of a pixel
@@ -163,25 +163,16 @@ architecture arch of gpuChip is
    signal wr0, wr1                              : std_logic;  -- host-side write control signal
 
   	-- SDRAM host side signals
-	signal sdram_bufclk 									: std_logic;    -- buffered input (non-DLL) clock
-	signal sdram_clk1x  									: std_logic;    -- internal master clock signal
-	signal sdram_clk2x  									: std_logic;		-- doubled clock
-	signal sdram_lock  									: std_logic;    -- SDRAM clock DLL lock indicator
+   signal sdram_clk1x   									: std_logic;    -- normal clock signal
 	signal sdram_rst    									: std_logic;    -- internal reset signal
 	signal sdram_rst_n  									: std_logic;    -- internal reset signal inverted
 	signal sdram_rd     									: std_logic;    -- host-side read control signal
 	signal sdram_wr     									: std_logic;    -- host-side write control signal
 	signal sdram_rd_n   									: std_logic;    -- host-side read control signal inverted
 	signal sdram_wr_n   									: std_logic;    -- host-side write control signal inverted
-	signal sdram_earlyOpBegun							: std_logic;
-	signal sdram_OpBegun									: std_logic;
-	signal sdram_rdPending								: std_logic;
-	signal sdram_done   									: std_logic;    -- SDRAM operation complete indicator
-	signal sdram_rdDone 									: std_logic;		-- host-side read completed signal
 	signal sdram_hAddr  									: std_logic_vector(ADDR_WIDTH -1 downto 0);  -- host address bus
 	signal sdram_hDIn   									: std_logic_vector(DATA_WIDTH -1 downto 0);	-- host-side data to SDRAM
 	signal sdram_hDOut  									: std_logic_vector(DATA_WIDTH -1 downto 0);	-- host-side data from SDRAM
-	signal sdram_status 									: std_logic_vector(3 downto 0);  -- SDRAM controller status
 
     signal sdram_valid                                      : std_logic;
     signal sdram_waitrequest                                : std_logic;
@@ -319,12 +310,12 @@ begin
                 reset_n => sdram_rst_n,
                 az_addr => sdram_hAddr,
                 az_be_n => "00",
-                az_cs => '1',
-                az_data => hDIn,
+                az_cs => '0',
+                az_data => sdram_hDIn,              --Input port on the memory controller
                 az_rd_n => sdram_rd_n,
                 az_wr_n => sdram_wr_n,
 
-                za_data => pin_sData,
+                za_data => sdram_hDOut,               --Output port on the memory controller
                 za_valid => sdram_valid,
                 za_waitrequest => sdram_waitrequest,
                 zs_addr => pin_sAddr,
@@ -378,37 +369,37 @@ begin
 -- instance of main blitter
 ------------------------------------------------------------------------------------------------------------
  
-	u4: Blitter
-	generic map(
-    FREQ              => FREQ, 
-    PIPE_EN           => PIPE_EN,
-  	 DATA_WIDTH        => DATA_WIDTH,
-    ADDR_WIDTH        => ADDR_WIDTH
-    )
-  port map (	
-    clk					 => sdram_clk1x,             
-	 rst					 => blit_reset,		 
+--	u4: Blitter
+--	generic map(
+--    FREQ              => FREQ, 
+--    PIPE_EN           => PIPE_EN,
+--  	 DATA_WIDTH        => DATA_WIDTH,
+--    ADDR_WIDTH        => ADDR_WIDTH
+--    )
+--  port map (	
+--    clk					 => sdram_clk1x,             
+--	 rst					 => blit_reset,		 
 -- 	 rd           	 	 => rd1,      
 --    wr                => wr1,
-	rd => open,
-	wr => open,
-    opBegun        	 => opBegun1,       
-    earlyopBegun   	 => earlyOpBegun1,       
-    done           	 => done1,
-	 rddone		 	    => rddone1,      
-    rdPending		    => rdPending1,
-	 Addr              => hAddr1,    
-    DIn               => hDIn1,     
-    DOut              => hDOut1,     
-	 blit_begin		    => blit_begin,
-	 source_address    => source_address, 
-	 source_lines	    => source_lines,
-	 target_address    => target_address,
-	 line_size		    => line_size,
-	 alphaOp			    => alphaOp,
-	 blit_done		    => blit_done,
-	 front_buffer	    => not_fb
-	 );
+--	rd => open,
+--	wr => open,
+--    opBegun        	 => opBegun1,       
+--    earlyopBegun   	 => earlyOpBegun1,       
+--    done           	 => done1,
+--	 rddone		 	    => rddone1,      
+--    rdPending		    => rdPending1,
+--	 Addr              => hAddr1,    
+--    DIn               => hDIn1,     
+--    DOut              => hDOut1,     
+--	 blit_begin		    => blit_begin,
+--	 source_address    => source_address, 
+--	 source_lines	    => source_lines,
+--	 target_address    => target_address,
+--	 line_size		    => line_size,
+--	 alphaOp			    => alphaOp,
+--	 blit_done		    => blit_done,
+--	 front_buffer	    => not_fb
+--	 );
 	 
 	 u5: sdram_pll
 	port map (
@@ -422,7 +413,7 @@ begin
 	port map ( 
            Clk => sdram_clk1x,
            nReset => pin_pushbtn,
-           wr => sdram_rdDone,
+           wr => sdram_valid,
            pixel_data_in => pixels,
            field_color => field_color_r,
            
@@ -469,9 +460,9 @@ begin
 	port map ( In0 => std_logic_vector(vga_address(19 downto 16)),
 			Out0 => hex6);
 			
-	u14: HexDriver
-	port map ( In0 => std_logic_vector(vga_address(23 downto 20)),
-			Out0 => hex7);
+--	u14: HexDriver
+--	port map ( In0 => std_logic_vector(vga_address(23 downto 20)),
+--			Out0 => hex7);
 --------------------------------------------------------------------------------------------------------------
 -- End of Submodules
 --------------------------------------------------------------------------------------------------------------
@@ -479,7 +470,6 @@ begin
 	rst_i <= not pin_pushbtn;
 	sdram_rd <= not full;
 	sdram_wr <= '0';
-	sdram_lock <= '1';
 	sdram_hAddr <= vga_address;
 	sdram_hDIn <= x"0000";
 	pixels <= sdram_hDOut;
@@ -500,9 +490,9 @@ begin
 	update: process(rst_i,eof, sdram_clk1x)
 	begin
 		if(rst_i = '1' or eof = '1') then
-			vga_address <= x"000000";
+			vga_address <= "00"&x"00000";
 		elsif(rising_edge(sdram_clk1x)) then
-			if(sdram_earlyOpBegun = '1') then
+			if(sdram_waitrequest = '0') then
 				vga_address <= vga_address + 1;
 			end if;
 		end if;
