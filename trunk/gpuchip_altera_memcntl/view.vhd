@@ -186,9 +186,10 @@ fifo : fifo_cc
 
   --Not sure about Endian, probably need to be fixed later. (Now higher byte to the left of lower byte on screen)
   current_pixel<= duo_pixel_r(15 downto 8) when DrawXSig(0)='0' else duo_pixel_r(7 downto 0);
-  r <= current_pixel(5 downto 4);
-  g <= current_pixel(3 downto 2);
-  b <= current_pixel(1 downto 0);
+  --current_pixel<= duo_pixel_r(7 downto 0) when DrawXSig(0)='0' else duo_pixel_r(15 downto 8);
+  r <= current_pixel(7 downto 6);
+  g <= current_pixel(4 downto 3);
+  b <= current_pixel(2 downto 1);
 
   start_of_frame <= '1' when DrawXSig = conv_std_logic_vector(799, 10) and DrawYSig = conv_std_logic_vector(524, 10) else'0';
   -- (524, 799) is the last coordinate output from the vgasync component, which indicates the advent of the first pixel

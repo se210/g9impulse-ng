@@ -4,7 +4,7 @@ use IEEE.std_logic_unsigned.all;
 use IEEE.numeric_std.all;
 use WORK.common.all;
 use WORK.sdram.all;
-use WORK.Blitter_pckg.all;
+--use WORK.Blitter_pckg.all;
 use WORK.sdram_pll_pckg.all;
 use WORK.view_pckg.all;
 use WORK.HexDriver_pckg.all;
