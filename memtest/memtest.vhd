@@ -45,7 +45,7 @@ architecture behavior of memtest is
     signal reset : std_logic;
     signal start : std_logic;
     signal cnt :std_logic_vector(23 downto 0);
-    signal addr_cnt: std_logic_vector(21 downto 0);
+    signal addr_cnt: std_logic_vector(22 downto 0);
     signal en_cnt:std_logic;
 	signal skip_wrt : std_logic;
 	signal state_num : std_logic_vector(3 downto 0);
@@ -67,7 +67,7 @@ begin
     reset <= not KEY(0);
     start <= not KEY(1);
     skip_wrt <= not KEY(2);
-    addr <= addr_cnt;
+    addr <= addr_cnt(21 downto 0);
 
 	--Components declaration
 	u1 : sdramCntl
@@ -149,11 +149,12 @@ begin
     address_cnt:process (state_cur, clk)
     begin
         if(state_cur=INIT_W or state_cur=INIT_R) then
-            addr_cnt<= conv_std_logic_vector(0,22);
+            addr_cnt<= conv_std_logic_vector(0,23);
             data_cnt<= conv_std_logic_vector(0,16);
         elsif (rising_edge(clk)) then
             if(state_cur=WRITE_INC or state_cur=READ_INC) then
                 addr_cnt<=addr_cnt+1;
+            elsif(state_cur=WRITE_CHK or state_cur=READ_CHK) then
                 data_cnt<=data_cnt+1;
             else
                 addr_cnt<=addr_cnt;
@@ -190,7 +191,26 @@ begin
             when WRITE_S =>
                 rd_i <= '0';
                 wr_i <= '1';
-				data_in <= addr_cnt(15 downto 0);
+                if(addr_cnt < x"000A0") then
+					data_in <= x"C0C0"; -- red
+				elsif(addr_cnt < x"00140") then
+					data_in <= x"1818"; -- green
+				elsif(addr_cnt < x"00280") then
+					data_in <= x"0606"; -- blue
+					
+				elsif(addr_cnt < x"00320") then
+					data_in <= x"1818"; -- green
+				elsif(addr_cnt < x"003C0") then
+					data_in <= x"0606"; -- blue
+				elsif(addr_cnt < x"00460") then
+					data_in <= x"FFFF"; -- white
+					
+				elsif((addr_cnt>= x"009560") and (addr_cnt < x"009600")) then
+					data_in <= x"FFFF";
+				else
+					data_in <= x"1818"; -- green
+				end if;
+--				data_in <= addr_cnt(15 downto 0);
 				--we need to keep outputting current address if done is low
                 if (done_i = '0') then
                     state_nxt<= WRITE_S;
@@ -206,10 +226,10 @@ begin
 			when WRITE_CHK=>
 				 rd_i <= '0';
 				 wr_i <= '0';
-				 if (addr_cnt = x"3FFFFF") then
-					state_nxt<=INIT_R;
-				 else
+				 if (addr_cnt < x"400000") then
 					state_nxt<=WRITE_S;
+				 else
+					state_nxt<=INIT_R;
 				 end if;
 				 state_num <= x"3";
             when INIT_R =>
@@ -240,10 +260,10 @@ begin
             when READ_CHK=>
 				rd_i <= '0';
 				wr_i <= '0';
-                if (addr_cnt = x"3FFFFF") then
-                    state_nxt<= REST;
+                if (addr_cnt < x"400000") then
+                    state_nxt<= READ_S;
 	            else
-                    state_nxt<=READ_S;
+                    state_nxt<=REST;
                 end if;
 				state_num <= x"7";
             when REST=>
