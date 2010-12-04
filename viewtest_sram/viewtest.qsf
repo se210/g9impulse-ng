@@ -481,8 +481,9 @@ set_global_assignment -name END_TIME "1 ms"
 set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim-Altera (VHDL)"
 set_global_assignment -name EDA_OUTPUT_DATA_FORMAT VHDL -section_id eda_simulation
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
-set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
 set_global_assignment -name INCREMENTAL_VECTOR_INPUT_SOURCE viewtest.vwf
+set_global_assignment -name VHDL_FILE common.vhd
+set_global_assignment -name VHDL_FILE sdramcntl.vhd
 set_global_assignment -name VHDL_FILE ram2port.vhd
 set_global_assignment -name VHDL_FILE fifo_cc.vhd
 set_global_assignment -name VHDL_FILE Color_Mapper.vhd
@@ -492,3 +493,5 @@ set_global_assignment -name VHDL_FILE view.vhd
 set_global_assignment -name VECTOR_WAVEFORM_FILE viewtest.vwf
 set_global_assignment -name VHDL_FILE viewtest.vhd
 set_global_assignment -name QIP_FILE ram2port.qip
+set_global_assignment -name QIP_FILE sdram_pll.qip
+set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

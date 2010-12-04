@@ -125,7 +125,6 @@ signal current_pixel : std_logic_vector(7 downto 0);
 --SRAM related signals
 signal rd : std_logic;
 signal full_i : std_logic;
-signal empty_i : std_logic;
 signal rd_addr  : std_logic_vector(17 downto 0) := (others=>'0');
 signal wr_addr  : std_logic_vector(17 downto 0) := (others=>'0');
 signal level_i  : std_logic_vector(17 downto 0) := (others=>'0');
@@ -161,8 +160,7 @@ Color_instance : Color_Mapper
             visible => visible);
   
   
-  --FIFO buffer implemented by SRAM        
-  --rd_allow <= rd and not empty_i;
+  --FIFO buffer implemented by SRAM
   rd_allow <= rd;
   wr_allow <= wr and not full_i;
 
@@ -180,16 +178,14 @@ Color_instance : Color_Mapper
       end if;
       if (wr_allow and not rd_allow and not full_i) = '1' then
         level_i <= level_i + '1';
-      elsif (rd_allow and not wr_allow and not empty_i) = '1' then
-        level_i <= level_i - '1';
+      elsif (rd_allow and not wr_allow) = '1' then
+        --level_i <= level_i - '1';
       end if;
     end if;
   end process;
 
   full_i  <= '1' when level_i = "111111111111111111" else '0';
   full    <= full_i;
-  --empty_i <= '1' when level_i = "000000000000000000" else '0';
-  empty_i <= '0';
   
   
 	-- memory read/write processes
@@ -208,8 +204,7 @@ Color_instance : Color_Mapper
 	end process;
 	
   --connections to SRAM
-   --pin_sram_addr <= rd_addr when rd='1' else wr_addr;
-   pin_sram_addr <= rd_addr;
+   pin_sram_addr <= rd_addr when rd='1' else wr_addr;
    pin_sram_we_n <= not wr;
    pin_sram_oe_n <= not rd;
    pin_sram_ub_n <= '0';
@@ -233,11 +228,7 @@ Color_instance : Color_Mapper
       elsif falling_edge(clk) and pixel_clk='0' and DrawXSig(0)='0' then
       -- Together with the set_read process a word is read right before it's needed for the even pixel
       -- I used falling edge because that's when the other two signals are stable
-          if empty_i='1' then
-              duo_pixel_r <= field_color&field_color;
-          else
-              duo_pixel_r <= pixel_data_out;
-          end if;
+		  duo_pixel_r <= pixel_data_out;
       end if;
   end process;
 
