@@ -90,6 +90,8 @@ entity gpuChip is
 		pin_sData  : inout std_logic_vector (16-1 downto 0);  -- data bus to SDRAM
 		pin_dqmh   : out std_logic;                  -- SDRAM DQMH
 		pin_dqml   : out std_logic;                   -- SDRAM DQML	
+
+        SW         : in std_logic_vector(17 downto 0);  --Controls the location of the start of screen
 		
 		hex0 : out std_logic_vector(6 downto 0);
 		hex1 : out std_logic_vector(6 downto 0);
@@ -177,6 +179,7 @@ architecture arch of gpuChip is
     signal sdram_valid                                      : std_logic;
     signal sdram_waitrequest                                : std_logic;
     signal sdram_dqm_i                                      : std_logic_vector(1 downto 0);
+    signal sdram_addr_fixed                                 : std_logic_vector(ADDR_WIDTH -1 downto 0); --fixed address for sdram_0
     
     signal hex_rd : std_logic_vector(3 downto 0);
 
@@ -472,7 +475,9 @@ begin
 	rst_i <= not pin_pushbtn;
 	sdram_rd <= (not full);
 	sdram_wr <= '0';
-	sdram_hAddr <= vga_address;
+    -- Weird workaround, bit 20 and bit 8 are swapped
+    sdram_addr_fixed <= vga_address(21)&vga_address(19 downto 8)&vga_address(20)&vga_address(7 downto 0);
+	sdram_hAddr <= sdram_addr_fixed;
 	sdram_hDIn <= x"0000";
 	pixels <= sdram_hDOut;
 	
@@ -494,7 +499,7 @@ begin
 	update: process(rst_i,eof, sdram_rd, sdram_waitrequest, sdram_clk1x)
 	begin
 		if(rst_i = '1' or eof = '1') then
-			vga_address <= (others=>'0');
+			vga_address <= SW&"0000";
 		elsif(rising_edge(sdram_clk1x)) then
 			if(sdram_waitrequest = '0' and full = '0') then
 			--if(sdram_valid='1') then
