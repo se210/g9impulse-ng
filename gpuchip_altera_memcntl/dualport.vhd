@@ -111,6 +111,7 @@ architecture arch of dualport is
     signal addr_i       : std_logic_vector(HADDR_WIDTH-1 downto 0); 
 begin
 
+    active_port <= '0' when port_r=port0 else '1';
     rdpending <= '0' when (rops="00") else '1';         --read pending when number of commands not 0
     ----------------------------------------------------------------------------
     -- multiplex the SDRAM controller port signals to/from the dual host-side ports  
