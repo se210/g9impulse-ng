@@ -108,6 +108,7 @@ architecture arch of dualport is
     signal rops         : std_logic_vector(1 downto 0);--Records the number of pipelined read commands.
     signal rd_i         : std_logic;        --Internal read signal
     signal can_switch   : std_logic;        --Indicate if it's safe to switch port
+    signal addr_i       : std_logic_vector(HADDR_WIDTH-1 downto 0); 
 begin
 
     rdpending <= '0' when (rops="00") else '1';         --read pending when number of commands not 0
@@ -115,7 +116,8 @@ begin
     -- multiplex the SDRAM controller port signals to/from the dual host-side ports  
     ----------------------------------------------------------------------------
     -- send the SDRAM controller the address and data from the currently active port
-    hAddr <= hAddr0 when port_r = port0 else hAddr1;
+    addr_i <= hAddr0 when port_r = port0 else hAddr1;
+    hAddr <= addr_i(21)&addr_i(19 downto 8)&addr_i(20)&addr_i(7 downto 0);  --Change to sdram_o convention
     hDIn  <= hDIn0  when port_r = port0 else hDIn1;
   
     -- both ports get the data from the SDRAM but only the active port will use it
