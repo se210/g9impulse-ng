@@ -191,9 +191,9 @@ fifo : fifo_cc
   g <= current_pixel(4 downto 3);
   b <= current_pixel(2 downto 1);
 
-  start_of_frame <= '1' when DrawXSig = conv_std_logic_vector(799, 10) and DrawYSig = conv_std_logic_vector(524, 10) else'0';
+  start_of_frame <= '1' when DrawXSig = conv_std_logic_vector(799, 10) and DrawYSig = conv_std_logic_vector(524, 10) and pixel_clk='1' else'0';
   -- (524, 799) is the last coordinate output from the vgasync component, which indicates the advent of the first pixel
   -- on the screen.
-  eof_i <= '1' when DrawYSig = conv_std_logic_vector(240,10) and DrawXSig = conv_std_logic_vector(320,10) else '0';
+  eof_i <= '1' when DrawYSig = conv_std_logic_vector(240,10) and DrawXSig = conv_std_logic_vector(320,10) and pixel_clk='1' else '0';
 
 end Behavioral;      

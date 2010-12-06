@@ -68,7 +68,9 @@ component gpuChip is
 		pin_sAddr  : out std_logic_vector(11 downto 0);      -- SDRAM address bus
 		pin_sData  : inout std_logic_vector (16-1 downto 0);  -- data bus to SDRAM
 		pin_dqmh   : out std_logic;                  -- SDRAM DQMH
-		pin_dqml   : out std_logic;                   -- SDRAM DQML	
+		pin_dqml   : out std_logic;                   -- SDRAM DQML
+		
+		SW : in std_logic_vector(17 downto 0);	
 		
 		hex0 : out std_logic_vector(6 downto 0);
 		hex1 : out std_logic_vector(6 downto 0);
@@ -142,6 +144,8 @@ begin
       pin_sData => pin_sData_i,
       pin_dqmh => pin_dqm_i(1),
       pin_dqml => pin_dqm_i(0),
+      
+      SW => (others=>'0'),
 
       hex0 => open,
       hex1 => open,
