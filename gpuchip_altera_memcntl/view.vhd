@@ -34,7 +34,9 @@ package view_pckg is
            blank : out std_logic;
            vs : out std_logic;
            hs : out std_logic;
-           visible_out : out std_logic);
+           visible_out : out std_logic;
+           DrawXOut : out std_logic_vector(9 downto 0);
+           DrawYOut : out std_logic_vector(9 downto 0));
     end component view;
 end package view_pckg;
 
@@ -62,7 +64,9 @@ entity view is
            blank : out std_logic;
            vs : out std_logic;
            hs : out std_logic;
-           visible_out : out std_logic);
+           visible_out : out std_logic;
+           DrawXOut : out std_logic_vector(9 downto 0);
+           DrawYOut : out std_logic_vector(9 downto 0));
 end view;
 
 architecture Behavioral of view is
@@ -111,6 +115,8 @@ begin
 
 visible_out <= visible;
 rst <= not nReset; -- The push buttons are active low
+DrawXOut <= DrawXSig;
+DrawYOut <= DrawYSig;
 
 vgaSync_instance : vga_controller
    Port map(clk => clk,

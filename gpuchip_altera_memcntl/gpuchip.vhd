@@ -23,6 +23,7 @@
 
 library IEEE;
 use IEEE.std_logic_1164.all;
+use IEEE.STD_LOGIC_ARITH.ALL;
 use IEEE.std_logic_unsigned.all;
 use IEEE.numeric_std.all;
 use WORK.common.all;
@@ -164,7 +165,7 @@ architecture arch of gpuChip is
     signal rd0, rd1		                        			: std_logic;  -- host-side read control signal
     signal wr0, wr1                              			: std_logic;  -- host-side write control signal
     signal rdPending0, rdPending1							: std_logic; -- host-side read pending signal
-    signal active_port										: std_logic;
+    signal portselect										: std_logic;
 
   	-- SDRAM host side signals
     signal sdram_clk1x   									: std_logic;    -- normal clock signal
@@ -197,6 +198,8 @@ architecture arch of gpuChip is
 	signal pin_green_in										: std_logic_vector(1 downto 0);
 	signal pin_blue_in										: std_logic_vector(1 downto 0);
 	signal visible : std_logic;
+	signal DrawX											: std_logic_vector(9 downto 0);
+	signal DrawY											: std_logic_vector(9 downto 0);
 	
 --------------------------------------------------------------------------------------------------------------
 -- Beginning of Submodules
@@ -217,7 +220,7 @@ begin
       )
      port map(
         clk 			=> sdram_clk1x,
-        portselect    	=> '0',
+        portselect    	=> portselect,
         reset			=> rst_i,
         active_port  	=> open,  -- Output information about active port.
         -- host-side port 0
@@ -310,7 +313,9 @@ begin
 	   blank 			=> pin_vga_blank,
 	   vs 				=> pin_vsync_n,
 	   hs 				=> pin_hsync_n,
-	   visible_out	 	=> visible);
+	   visible_out	 	=> visible,
+	   DrawXOut			=> DrawX,
+	   DrawYOut			=>DrawY);
 	   
 ------------------------------------------------------------------------------------------------------------
 -- instance of main blitter
@@ -391,7 +396,7 @@ begin
 -- Begin Top Level Module
     -- Corrected format for the SDRAM address to match the way that DE2 Control Panel writes to the SDRAM
 	
-	hex_rd <= "000"&not pin_load;
+	hex_rd <= "000"& pin_load;
 	
 	
 	pin_red <= pin_red_in & x"00";
@@ -406,6 +411,8 @@ begin
 	pin_ce_n <= '1';						  -- disable Flash RAM
 	pin_clkout <= sdram_clk1x; -- clock to the PIC
 	pin_pushbtn_out <= pin_pushbtn;
+	
+	portselect <= '1' when (visible='0' and full='1' and rdPending0='0' and DrawY > conv_std_logic_vector(240,10) and DrawY < conv_std_logic_vector(524,10)) else '0';
   	
 	--rd0 <= ((not full) and drawframe); -- negate the full signal for use in controlling the SDRAM read operation
 	rd0 <= not full;
@@ -433,7 +440,7 @@ begin
 	front_buffer	<= front_buffer_r when db_enable_r = '1' else YES;	
 	not_fb			<= (not front_buffer_r) when db_enable_r = '1' else YES;
 
-	comb:process(state_r, port_in, port_addr, pin_start)
+	comb:process(state_r, port_in, pin_load, port_addr, pin_start, blit_done)
 	begin
 	  	blit_begin 			<= NO;						--default operations		
 		reset_blitter 		<= NO;
@@ -468,7 +475,7 @@ begin
 						when "1000" => alphaOp_x					  <= port_in(0);
 						when "1001" => db_enable_x 					  <= port_in(0);
 						when "1010" => front_buffer_x				  <= port_in(0);
-						when others =>
+						when others => NULL;
 					end case;				
 				end if;
 		
