@@ -21,5 +21,5 @@ FUNCTION sdram_pll
 RETURNS (
 	c0,
 	c1,
-	c2
+	locked
 );
