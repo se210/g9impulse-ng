@@ -126,6 +126,7 @@ architecture behavior of blitter is
     signal write_addr_buf  : std_logic_vector(21 downto 0);
     signal write_addr_buf2 : std_logic_vector(21 downto 0);
     signal write_addr_buf3 : std_logic_vector(21 downto 0);
+    signal write_addr_buf4 : std_logic_vector(21 downto 0);
 
     -- fifo signals
     signal rd_q     : std_logic;
@@ -177,7 +178,7 @@ begin
 
     -- SRAM outputs
     --sram_addr <= write_addr_r(17 downto 0);
-    sram_addr <= write_addr_buf3(17 downto 0);
+    sram_addr <= write_addr_buf4(17 downto 0);
     sram_oe_n <= '1';   -- no reading by blitter
     sram_ce_n <= '0';   -- chip enable??
     sram_we_n <= not sram_we;
@@ -328,6 +329,7 @@ begin
             write_addr_buf <= write_addr_r;
             write_addr_buf2 <= write_addr_buf;
             write_addr_buf3 <= write_addr_buf2;
+            write_addr_buf4 <= write_addr_buf3;
 --            if (sram_waitrequest = NO) then
 --                sram_we <= rd_q;
 --            end if;
