@@ -21,7 +21,7 @@ package blitter_pckg is
                 sdram_waitrequest   : in std_logic;
                 -- signals to SRAM
                 sram_addr   : out std_logic_vector(17 downto 0);
-                sram_dq     : inout std_logic_vector(15 downto 0);
+                sram_dq     : out std_logic_vector(15 downto 0);
                 sram_we_n   : out std_logic;
                 sram_oe_n   : out std_logic;
                 sram_ub_n   : out std_logic;
@@ -68,7 +68,7 @@ entity blitter is
             sdram_waitrequest   : in std_logic;
             -- signals to SRAM
             sram_addr   : out std_logic_vector(17 downto 0);
-            sram_dq     : inout std_logic_vector(15 downto 0);
+            sram_dq     : out std_logic_vector(15 downto 0);
             sram_we_n   : out std_logic;
             sram_oe_n   : out std_logic;
             sram_ub_n   : out std_logic;
@@ -105,6 +105,7 @@ architecture behavior of blitter is
         STANDBY,
         INIT,
         WRITE,
+        WRITE2,
         CONTINUE
     );
     signal write_state_r, write_state_x : writeState;
@@ -123,6 +124,8 @@ architecture behavior of blitter is
     signal write_addr_r, write_addr_x   : std_logic_vector(21 downto 0);
     
     signal write_addr_buf  : std_logic_vector(21 downto 0);
+    signal write_addr_buf2 : std_logic_vector(21 downto 0);
+    signal write_addr_buf3 : std_logic_vector(21 downto 0);
 
     -- fifo signals
     signal rd_q     : std_logic;
@@ -131,7 +134,6 @@ architecture behavior of blitter is
     signal empty_q  : std_logic;
     signal wr_q_en  : std_logic;
     signal out_q    : std_logic_vector(15 downto 0);
-    signal out_q_buf    : std_logic_vector(15 downto 0);
 
     signal sdram_rd : std_logic;
     signal sram_we  : std_logic;
@@ -175,7 +177,7 @@ begin
 
     -- SRAM outputs
     --sram_addr <= write_addr_r(17 downto 0);
-    sram_addr <= write_addr_buf(17 downto 0);
+    sram_addr <= write_addr_buf3(17 downto 0);
     sram_oe_n <= '1';   -- no reading by blitter
     sram_ce_n <= '0';   -- chip enable??
     sram_we_n <= not sram_we;
@@ -190,7 +192,8 @@ begin
                          write_state_r = CONTINUE else NO;
 
     -- fifo write?
-    wr_q <= wr_q_en and sdram_valid;
+    --wr_q <= wr_q_en and sdram_valid;
+    wr_q <= sdram_valid;
 
     read_comb : process (read_state_r, s_addr_r, read_line_r, read_addr_r,
                          read_count_r, sdram_waitrequest, sdram_valid,
@@ -252,6 +255,7 @@ begin
                           front_buffer, sram_waitrequest)
     begin
         rd_q <= NO;
+        sram_we <= NO;
 
         t_addr_x <= t_addr_r;
 
@@ -286,7 +290,12 @@ begin
                         write_addr_x    <= write_addr_r + '1';
                         write_count_x   <= write_count_r + '1';
                     end if;
+                    write_state_x <= WRITE2;
                 end if;
+                
+            when WRITE2 =>
+				write_state_x <= WRITE;
+				sram_we <= YES;
 
                 if (write_line_r = source_lines) then
                     write_state_x <= CONTINUE;
@@ -317,9 +326,11 @@ begin
             write_count_r <= write_count_x;
             write_addr_r <= write_addr_x;
             write_addr_buf <= write_addr_r;
-            if (sram_waitrequest = NO) then
-                sram_we <= rd_q;
-            end if;
+            write_addr_buf2 <= write_addr_buf;
+            write_addr_buf3 <= write_addr_buf2;
+--            if (sram_waitrequest = NO) then
+--                sram_we <= rd_q;
+--            end if;
 
         end if;
     end process update;
