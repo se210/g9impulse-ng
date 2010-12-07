@@ -21,8 +21,8 @@ package view_pckg is
            nReset : in std_logic;
            field_color 	  : in std_logic_vector(7 downto 0);
 
-		   eof             : out std_logic;    -- end of vga frame
-		   full            : out std_logic;    -- pixel buffer full           
+		   sof			   : out std_logic;
+		   eof             : out std_logic;    -- end of vga frame         
            Red   : out std_logic_vector(1 downto 0);
            Green : out std_logic_vector(1 downto 0);
            Blue  : out std_logic_vector(1 downto 0);
@@ -35,6 +35,9 @@ package view_pckg is
            
            --SRAM interface
            wr : in  std_logic;    -- write-enable for pixel buffer
+           wr_addr : in std_logic_vector(17 downto 0); -- adress to write to in SRAM
+           wr_be_n : in std_logic_vector(1 downto 0); -- byte-enable mask for writing
+           wait_request : out std_logic; -- wait request for the write
            pixel_data_in   : in  std_logic_vector(15 downto 0);  -- input databus to pixel buffer
            pin_sram_addr : out std_logic_vector(17 downto 0);
            pin_sram_dq : inout std_logic_vector(15 downto 0);
@@ -58,8 +61,8 @@ entity view is
            nReset : in std_logic;
            field_color 	  : in std_logic_vector(7 downto 0);
 
-		   eof             : out std_logic;    -- end of vga frame
-		   full            : out std_logic;    -- pixel buffer full           
+		   sof			   : out std_logic;
+		   eof             : out std_logic;    -- end of vga frame        
            Red   : out std_logic_vector(1 downto 0);
            Green : out std_logic_vector(1 downto 0);
            Blue  : out std_logic_vector(1 downto 0);
@@ -72,6 +75,9 @@ entity view is
            
            --SRAM interface
            wr : in  std_logic;    -- write-enable for pixel buffer
+           wr_addr : in std_logic_vector(17 downto 0); -- adress to write to in SRAM
+           wr_be_n : in std_logic_vector(1 downto 0); -- byte-enable mask for writing
+           wait_request : out std_logic; -- wait request for the write
            pixel_data_in   : in  std_logic_vector(15 downto 0);  -- input databus to pixel buffer
            pin_sram_addr : out std_logic_vector(17 downto 0);
            pin_sram_dq : inout std_logic_vector(15 downto 0);
@@ -124,13 +130,8 @@ signal current_pixel : std_logic_vector(7 downto 0);
 
 --SRAM related signals
 signal rd : std_logic;
-signal full_i : std_logic;
 signal rd_addr  : std_logic_vector(17 downto 0) := (others=>'0');
-signal wr_addr  : std_logic_vector(17 downto 0) := (others=>'0');
-signal level_i  : std_logic_vector(17 downto 0) := (others=>'0');
-signal rd_allow : std_logic;
 signal wr_allow : std_logic;
-signal fifo_rst : std_logic;
 
 begin
 
@@ -160,43 +161,52 @@ Color_instance : Color_Mapper
             visible => visible);
   
   
-  --FIFO buffer implemented by SRAM
-  rd_allow <= rd;
-  wr_allow <= wr and not full_i;
-
-  process (clk, rst)
-  begin
-    if fifo_rst = '1' then
-      rd_addr   <= (others => '0');
-      wr_addr   <= (others => '0');
-      level_i   <= (others => '0');
-    elsif rising_edge(clk) then
-      if rd_allow = '1' then
-        rd_addr <= rd_addr + '1';
-      elsif wr_allow = '1' then
-        wr_addr <= wr_addr + '1';
-      end if;
-      if (wr_allow and not rd_allow and not full_i) = '1' then
-        level_i <= level_i + '1';
-      elsif (rd_allow and not wr_allow) = '1' then
-        --level_i <= level_i - '1';
-      end if;
-    end if;
+  combinatorial : process (clk, visible, pixel_clk, DrawXSig, DrawYSig)
+  begin	
+	if(rising_edge(pixel_clk)) then
+		if((DrawXSig >= 0) and (DrawXSig < 320) and (DrawYSig >= 0) and (DrawYSig < 240)) then
+			rd <= '1';
+			wr_allow <= '0';
+		elsif(DrawXSig = 799 and DrawYSig = 524) then
+			rd <= '1';
+			wr_allow <= '0';
+		else
+			if(DrawYSig > conv_std_logic_vector(239,10) and DrawYSig < conv_std_logic_vector(800,10)) then
+				rd <= '0';
+				wr_allow <= '1';
+			else
+				rd <= '0';
+				wr_allow <= '0';
+			end if;
+		end if;
+	end if;
   end process;
-
-  full_i  <= '1' when level_i = "111111111111111111" else '0';
-  full    <= full_i;
   
+  process(pixel_clk)
+  begin
+	if(rising_edge(pixel_clk)) then
+		if(DrawXSig = conv_std_logic_vector(799,10) and DrawYSig = conv_std_logic_vector(524,10)) then
+			rd_addr <= (others=>'0');
+		elsif(visible='1') then
+			if(DrawXSig(0) = '1') then
+				rd_addr <= rd_addr+1;
+			end if;
+		end if;
+	end if;
+  end process;
+  
+  wait_request <= not wr_allow;
+				
   
 	-- memory read/write processes
 	-- reading from memory has priority over writing to memory
 	
 	pixel_data_out <= pin_sram_dq;
 	
-	Mem_Write : process (wr, pixel_data_in) is
+	Mem_Write : process (wr, wr_allow, pixel_data_in) is
 	begin
 	   pin_sram_dq <= "ZZZZZZZZZZZZZZZZ";
-	   if (rd = '0' and wr = '1') then
+	   if (wr_allow = '1' and wr = '1') then
 		  pin_sram_dq <= pixel_data_in;
 	   else
 		  null;
@@ -204,11 +214,11 @@ Color_instance : Color_Mapper
 	end process;
 	
   --connections to SRAM
-   pin_sram_addr <= rd_addr when rd='1' else wr_addr;
-   pin_sram_we_n <= not wr;
+   pin_sram_addr <= wr_addr when (wr_allow='1' and wr='1') else rd_addr;
+   pin_sram_we_n <= not (wr and wr_allow);
    pin_sram_oe_n <= not rd;
-   pin_sram_ub_n <= '0';
-   pin_sram_lb_n <= '0';
+   pin_sram_ub_n <= wr_be_n(1) when (wr_allow='1' and wr='1') else '0';
+   pin_sram_lb_n <= wr_be_n(0) when (wr_allow='1' and wr='1') else '0';
    pin_sram_ce_n <= '0';  
             
             
@@ -217,8 +227,8 @@ Color_instance : Color_Mapper
   blank <= blank_i;
   VGA_clk <= pixel_clk;
 
+  sof	   <= sof_i;
   eof      <= eof_i;
-  fifo_rst <= eof_i or rst;             -- clear the contents of the pixel buffer at the end of every frame
 
   --Wenxun wrote this, blame him
   grab_pixel : process(clk, pixel_clk, DrawXSig, rst, eof_i)
@@ -229,19 +239,6 @@ Color_instance : Color_Mapper
       -- Together with the set_read process a word is read right before it's needed for the even pixel
       -- I used falling edge because that's when the other two signals are stable
 		  duo_pixel_r <= pixel_data_out;
-      end if;
-  end process;
-
-  set_read : process(clk, pixel_clk, DrawXSig, rst, eof_i)
-  begin
-      if(rst='1' or eof_i='1') then
-          rd <= '0';
-      elsif falling_edge(clk)  then
-          if pixel_clk='0' and ((DrawXSig(0)='1' and visible='1') or sof_i='1')  then
-              rd<='1';
-          else 
-              rd<='0';
-          end if;
       end if;
   end process;
 

@@ -1,6 +1,24 @@
+Quartus II Archive log --	C:/Users/SEJOON/Desktop/ECE 395/g9impulse-ng/viewtest_sram/viewtest.qarlog
 
+Archive:	C:/Users/SEJOON/Desktop/ECE 395/g9impulse-ng/viewtest_sram/viewtest.qar
+Date:		Mon Dec 06 21:43:16 2010
+Quartus II		9.1 Build 350 03/24/2010 SP 2 SJ Web Edition
 
-******* Archived project restoration attempt on Wed Dec 01 01:26:37 2010
-Source archive file:	C:/Users/SEJOON/Desktop/ECE 395/g9impulse-ng/viewtest_sram/viewtest.qar
-Archive was extracted into	C:/Users/SEJOON/Desktop/ECE 395/g9impulse-ng/viewtest_sram/
-		 - successfully.
+	=========== Files Selected: ===========
+C:/Users/SEJOON/Desktop/ECE 395/g9impulse-ng/viewtest_sram/Color_Mapper.vhd
+C:/Users/SEJOON/Desktop/ECE 395/g9impulse-ng/viewtest_sram/HexDriver.vhd
+C:/Users/SEJOON/Desktop/ECE 395/g9impulse-ng/viewtest_sram/VGA_controller.vhd
+C:/Users/SEJOON/Desktop/ECE 395/g9impulse-ng/viewtest_sram/assignment_defaults.qdf
+C:/Users/SEJOON/Desktop/ECE 395/g9impulse-ng/viewtest_sram/db/viewtest.sim.cvwf
+C:/Users/SEJOON/Desktop/ECE 395/g9impulse-ng/viewtest_sram/sdram_pll.ppf
+C:/Users/SEJOON/Desktop/ECE 395/g9impulse-ng/viewtest_sram/sdram_pll.qip
+C:/Users/SEJOON/Desktop/ECE 395/g9impulse-ng/viewtest_sram/sdram_pll.vhd
+C:/Users/SEJOON/Desktop/ECE 395/g9impulse-ng/viewtest_sram/view.vhd
+C:/Users/SEJOON/Desktop/ECE 395/g9impulse-ng/viewtest_sram/viewtest.qpf
+C:/Users/SEJOON/Desktop/ECE 395/g9impulse-ng/viewtest_sram/viewtest.qsf
+C:/Users/SEJOON/Desktop/ECE 395/g9impulse-ng/viewtest_sram/viewtest.vhd
+C:/Users/SEJOON/Desktop/ECE 395/g9impulse-ng/viewtest_sram/viewtest.vwf
+	======= Total: 13 files to archive =======
+
+	================ Status: ===============
+All files archived successfully.
