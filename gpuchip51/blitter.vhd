@@ -46,7 +46,7 @@ end blitter_pckg;
 
 library ieee;
 use ieee.std_logic_1164.all;
-use ieee.std_logic_arith.all;
+--use ieee.std_logic_arith.all;
 use ieee.std_logic_unsigned.all;
 use work.common.all;
 use work.blitter_fifo_pckg.all;
@@ -121,6 +121,8 @@ architecture behavior of blitter is
     signal write_line_r, write_line_x   : std_logic_vector(7 downto 0);
     signal write_count_r, write_count_x : std_logic_vector(7 downto 0);
     signal write_addr_r, write_addr_x   : std_logic_vector(21 downto 0);
+    
+    signal write_addr_buf  : std_logic_vector(21 downto 0);
 
     -- fifo signals
     signal rd_q     : std_logic;
@@ -163,7 +165,7 @@ begin
              );
 
     -- SDRAM outputs
-    sdram_addr  <= read_addr_r;
+    sdram_addr  <= read_addr_r(21)&read_addr_r(19 downto 8)&read_addr_r(20)&read_addr_r(7 downto 0);
     sdram_wr_n  <= '1';     -- disable writes
     sdram_be_n  <= "00";    -- enable both bytes
     sdram_cs    <= '1';     -- chip select??
@@ -171,7 +173,8 @@ begin
     sdram_rd_n  <= not sdram_rd;
 
     -- SRAM outputs
-    sram_addr <= write_addr_r(17 downto 0);
+    --sram_addr <= write_addr_r(17 downto 0);
+    sram_addr <= write_addr_buf(17 downto 0);
     sram_oe_n <= '1';   -- no reading by blitter
     sram_ce_n <= '0';   -- chip enable??
     sram_we_n <= not sram_we;
@@ -188,12 +191,13 @@ begin
     -- fifo write?
     wr_q <= wr_q_en and sdram_valid;
 
-    read_comb : process (read_state_r, s_addr_r, read_line_r,
+    read_comb : process (read_state_r, s_addr_r, read_line_r, read_addr_r,
                          read_count_r, sdram_waitrequest, sdram_valid,
                          source_address, full_q, source_lines,
                          line_size, blit_begin)
     begin
         sdram_rd    <= NO;
+        wr_q_en     <= NO;
 
         s_addr_x    <= s_addr_r;
 
@@ -216,19 +220,19 @@ begin
                 read_state_x <= READ;
 
             when READ =>
+                wr_q_en <= YES;
                 if (sdram_waitrequest = NO and full_q = NO) then
                     sdram_rd <= YES;
-                    wr_q_en <= YES;
 
-                    read_addr_x <= read_addr_r + 1;
-                    if (read_count_x = line_size - 1) then
+                    --read_addr_x <= read_addr_r + '1';
+                    if (read_count_r = line_size - '1') then
                         read_count_x    <= x"00";
-                        read_line_x     <= read_line_r + 1;
+                        read_line_x     <= read_line_r + '1';
                         read_addr_x     <= s_addr_r + x"000A0";
                         s_addr_x        <= s_addr_r + x"000A0";
                     else
-                        read_addr_x <= read_addr_r + 1;
-                        read_count_x <= read_count_r + 1;
+                        read_addr_x <= read_addr_r + '1';
+                        read_count_x <= read_count_r + '1';
                     end if;
                 end if;
 
@@ -242,12 +246,12 @@ begin
         end case;
     end process read_comb;
 
-    write_comb : process (write_state_r, t_addr_r, write_line_r,
+    write_comb : process (write_state_r, t_addr_r, write_line_r, write_addr_r,
                           write_count_r, target_address, empty_q,
                           source_lines, line_size, blit_begin,
                           front_buffer, sram_waitrequest)
     begin
-        sram_we <= NO;
+        --sram_we <= NO;
         rd_q <= NO;
 
         t_addr_x <= t_addr_r;
@@ -264,31 +268,31 @@ begin
                 end if;
 
             when INIT =>
-                t_addr_x <= target_address - 1;
-                write_addr_x <= target_address - 1;
+                t_addr_x <= target_address;
+                write_addr_x <= target_address;
                 write_line_x <= x"00";
                 write_count_x <= x"00";
                 write_state_x <= WRITE;
 
             when WRITE =>
                 if (empty_q = NO and sram_waitrequest = NO) then
-                    sram_we <= YES;
+                    --sram_we <= YES;
                     rd_q <= YES;
 
-                    write_addr_x <= write_addr_r + 1;
-                    if (write_count_x = line_size - 1) then
+                    --write_addr_x <= write_addr_r + '1';
+                    if (write_count_r = line_size - '1') then
                         write_count_x   <= x"00";
-                        write_line_x    <= write_line_r + 1;
+                        write_line_x    <= write_line_r + '1';
                         write_addr_x    <= t_addr_r + x"000A0";
                         t_addr_x        <= t_addr_r + x"000A0";
                     else
-                        write_addr_x    <= write_addr_r + 1;
-                        write_count_x   <= write_count_r + 1;
+                        write_addr_x    <= write_addr_r + '1';
+                        write_count_x   <= write_count_r + '1';
                     end if;
                 end if;
 
                 if (write_line_r = source_lines) then
-                    sram_we <= NO;
+                    --sram_we <= NO;
                     write_state_x <= CONTINUE;
                 end if;
 
@@ -297,28 +301,29 @@ begin
         end case;
     end process write_comb;
 
-    update : process (clk, reset)
+    update : process (clk, reset, sram_waitrequest)
     begin
-        if (rising_edge(clk)) then
-            if (reset = '1') then
-                read_state_r <= STANDBY;
-                write_state_r <= STANDBY;
-            else
-                s_addr_r <= s_addr_x;
-                t_addr_r <= t_addr_x;
+        if (reset = '1') then
+			read_state_r <= STANDBY;
+			write_state_r <= STANDBY;
+		elsif (rising_edge(clk)) then
+			s_addr_r <= s_addr_x;
+			t_addr_r <= t_addr_x;
 
-                read_line_r <= read_line_x;
-                read_count_r <= read_count_x;
-                read_addr_r <= read_addr_x;
+			read_line_r <= read_line_x;
+			read_count_r <= read_count_x;
+			read_addr_r <= read_addr_x;
 
-                read_state_r <= read_state_x;
-                write_state_r <= write_state_x;
+			read_state_r <= read_state_x;
+			write_state_r <= write_state_x;
 
-                write_line_r <= write_line_x;
-                write_count_r <= write_count_x;
-                write_addr_r <= write_addr_x;
-
-            end if;
+			write_line_r <= write_line_x;
+			write_count_r <= write_count_x;
+			write_addr_r <= write_addr_x;
+			write_addr_buf <= write_addr_r;
+			if (sram_waitrequest = NO) then
+				sram_we <= rd_q;
+			end if;
         end if;
     end process update;
 

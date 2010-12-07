@@ -9,11 +9,11 @@ use work.sdram_pll_pckg.all;
 use work.view_pckg.all;
 use work.hexdriver_pckg.all;
 
-entity gpuchip is
+entity new_gpuchip is
     generic (
                 ADDR_WIDTH  : natural   := 22;
                 SADDR_WIDTH : natural   := 12;
-                DATA_WIDTH  : natural   := 22
+                DATA_WIDTH  : natural   := 16
             );
     port (
             pin_clkin   : in std_logic;
@@ -71,9 +71,9 @@ entity gpuchip is
             hex6 : out std_logic_vector(6 downto 0);
             hex7 : out std_logic_vector(6 downto 0)
         );
-end gpuchip;
+end new_gpuchip;
 
-architecture behavior of gpuchip is
+architecture behavior of new_gpuchip is
     constant YES    : std_logic := '1';
     constant NO     : std_logic := '0';
     constant HI     : std_logic := '1';
@@ -91,7 +91,7 @@ architecture behavior of gpuchip is
     signal source_address_r, source_address_x
         : std_logic_vector(ADDR_WIDTH-1 downto 0);
     signal target_address_r, target_address_x
-        : std_logic_vector(21DR_WIDTH-1 downto 0);
+        : std_logic_vector(ADDR_WIDTH-1 downto 0);
     signal source_lines_r, source_lines_x       : std_logic_vector(7 downto 0);
     signal line_size_r, line_size_x             : std_logic_vector(7 downto 0);
     signal alpha_op_r, alpha_op_x               : std_logic;
@@ -119,7 +119,7 @@ architecture behavior of gpuchip is
     signal front_buffer         : std_logic;
 
     -- blitter SDRAM signals
-    signal sdram_addr       : std_logic_vector(SADDR_WIDTH-1 downto 0);
+    signal sdram_addr       : std_logic_vector(ADDR_WIDTH-1 downto 0);
     signal sdram_be_n       : std_logic_vector(1 downto 0);
     signal sdram_cs         : std_logic;
     signal sdram_wr_data    : std_logic_vector(DATA_WIDTH-1 downto 0);
@@ -198,7 +198,6 @@ begin
                 pin_sram_lb_n   => pin_sram_lb_n,
                 pin_sram_ce_n   => pin_sram_ce_n
              );
-    pin_sram_we_n   <= not sram_wr;
     pin_red         <= view_red     & x"00";
     pin_green       <= view_green   & x"00";
     pin_blue        <= view_blue    & x"00";
@@ -307,7 +306,7 @@ begin
         target_address_x    <= target_address_r;
         source_lines_x      <= source_lines_r;
         line_size_x         <= line_size_r;
-        alphaOp_x           <= alphaOp_r;
+        alpha_op_x          <= alpha_op_r;
         db_enable_x         <= db_enable_r;
         front_buffer_x      <= front_buffer_r;
         idle_x              <= idle_r;
@@ -319,39 +318,49 @@ begin
                 state_x <= LOAD;
 
             when LOAD =>
-                if (pin_load = YES) then
-                    case port_addr is 
-                        when "0000" =>
-                            source_address_x(23 downto 16)  <= port_in;
-                        when "0001" =>
-                            source_address_x(15 downto 8)   <= port_in; 
-                        when "0010" =>
-                            source_address_x(7 downto  0)   <= port_in;
-                        when "0011" =>
-                            target_address_x(23 downto 16)  <= port_in;
-                        when "0100" =>
-                            target_address_x(15 downto 8)   <= port_in;
-                        when "0101" =>
-                            target_address_x(7 downto  0)   <= port_in;
-                        when "0110" =>
-                            source_lines_x                  <= port_in;
-                        when "0111" => 
-                            line_size_x                     <= port_in;
-                        when "1000" =>
-                            alpha_op_x                      <= port_in(0);
-                        when "1001" =>
-                            db_enable_x                     <= port_in(0);
-                        when "1010" =>
-                            front_buffer_x                  <= port_in(0);
-                        when others =>
-                            NULL;
-                    end case;                
-                end if;
+--                if (pin_load = YES) then
+--                    case port_addr is 
+--                        when "0000" =>
+--                            source_address_x(21 downto 16)  <= port_in(5 downto 0);
+--                        when "0001" =>
+--                            source_address_x(15 downto 8)   <= port_in; 
+--                        when "0010" =>
+--                            source_address_x(7 downto  0)   <= port_in;
+--                        when "0011" =>
+--                            target_address_x(21 downto 16)  <= port_in(5 downto 0);
+--                        when "0100" =>
+--                            target_address_x(15 downto 8)   <= port_in;
+--                        when "0101" =>
+--                            target_address_x(7 downto  0)   <= port_in;
+--                        when "0110" =>
+--                            source_lines_x                  <= port_in;
+--                        when "0111" => 
+--                            line_size_x                     <= port_in;
+--                        when "1000" =>
+--                            alpha_op_x                      <= port_in(0);
+--                        when "1001" =>
+--                            db_enable_x                     <= port_in(0);
+--                        when "1010" =>
+--                            front_buffer_x                  <= port_in(0);
+--                        when others =>
+--                            NULL;
+--                    end case;                
+--                end if;
+				--source_address_x <= "11"&x"6CFE0";
+				--source_address_x <= "10"&x"22E00";
+				source_address_x <= "00"&x"CC740";
+				--source_address_x <= "00"&x"00000";
+				target_address_x <= "00"&x"00000";
+				source_lines_x <= conv_std_logic_vector(240,8);
+				line_size_x <= conv_std_logic_vector(160,8);
+				alpha_op_x <= '1';
 
-                if (pin_start = YES) then
-                    idle_x  <= NO;
-                    state_x <= DRAW;
-                end if;
+--                if (pin_start = YES) then
+--                    idle_x  <= NO;
+--                    state_x <= DRAW;
+--                end if;
+				idle_x <= NO;
+				state_x <= DRAW;
 
             when DRAW =>
                 blit_begin <= YES;
