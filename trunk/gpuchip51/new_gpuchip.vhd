@@ -81,13 +81,18 @@ architecture behavior of new_gpuchip is
 
     type gpuState is (
         INIT,
-        LOAD,
-        DRAW,
-        REST
+        LOAD1,
+        DRAW1,
+        REST1,
+        LOAD2,
+        DRAW2,
+        REST2
     );
     signal state_r, state_x : gpuState;
 
     -- registers
+    signal counter								: std_logic_vector(13 downto 0);
+    signal state_number							: std_logic_vector(3 downto 0);
     signal source_address_r, source_address_x
         : std_logic_vector(ADDR_WIDTH-1 downto 0);
     signal target_address_r, target_address_x
@@ -273,6 +278,10 @@ begin
                 zs_we_n     => pin_sdram_we_n
             );
     pin_sdram_clk <= clk0;
+    
+    h0 : HexDriver
+    Port map ( In0 => state_number,
+		   Out0 => hex0);
 
     -------------------------------------------------------------------
     -- End of Sub Modules
@@ -294,7 +303,7 @@ begin
     front_buffer    <= front_buffer_r when db_enable_r = YES else YES;
     not_fb          <= (not front_buffer_r) when db_enable_r = YES else YES;
 
-    combinatorial : process (state_r, port_in, port_addr, pin_start)
+    combinatorial : process (state_r, port_in, port_addr, pin_start, view_eof, view_sof)
     begin
         -- default operations
         blit_begin      <= NO;
@@ -315,9 +324,12 @@ begin
             when INIT =>
                 idle_x <= YES;
                 reset_blitter <= YES;
-                state_x <= LOAD;
+                state_x <= LOAD1;
+                counter <= (others=>'0');
+                state_number <= x"0";
 
-            when LOAD =>
+            when LOAD1 =>
+				state_number <= x"1";
 --                if (pin_load = YES) then
 --                    case port_addr is 
 --                        when "0000" =>
@@ -347,34 +359,65 @@ begin
 --                    end case;                
 --                end if;
 				--source_address_x <= "11"&x"6CFE0";
-				--source_address_x <= "10"&x"22E00";
+				source_address_x <= "10"&x"9FE00" - counter * x"A0";
 				--source_address_x <= "00"&x"CC740";
-				source_address_x <= "00"&x"D14E4";
-				target_address_x <= "00"&x"04030";
+				--source_address_x <= "00"&x"D14E4";
+				--source_address_x <= "00"&x"D7A00";
+				target_address_x <= "00"&x"00000";
 				--target_address_x <= (others => '0');
-				source_lines_x <= conv_std_logic_vector(10,8);
-				line_size_x <= conv_std_logic_vector(5,8);
-				alpha_op_x <= '0';
+				source_lines_x <= conv_std_logic_vector(240,8);
+				line_size_x <= conv_std_logic_vector(160,8);
+				alpha_op_x <= '1';
 
 --                if (pin_start = YES) then
 --                    idle_x  <= NO;
 --                    state_x <= DRAW;
 --                end if;
 				idle_x <= NO;
-				state_x <= DRAW;
+				if (view_eof = YES) then
+					state_x <= DRAW1;
+				end if;
 
-            when DRAW =>
+            when DRAW1 =>
+				state_number <= x"2";
+				counter <= counter +1;
                 blit_begin <= YES;
                 if (blit_done = YES) then
                     reset_blitter <= YES;
                     idle_x <= YES;
-                    state_x <= REST;
+                    state_x <= REST1;
                 end if;
 
-            when REST =>
+            when REST1 =>
+				state_number <= x"3";
                 reset_blitter <= YES;
-                state_x <= LOAD;
-
+                state_x <= LOAD2;
+                
+            when LOAD2 =>
+				state_number <= x"4";
+				source_address_x <= "00"&x"D7A00";
+				target_address_x <= "00"&x"00000";
+				source_lines_x <= conv_std_logic_vector(28,8);
+				line_size_x <= conv_std_logic_vector(16,8);
+				alpha_op_x <= '0';
+				idle_x <= NO;
+				state_x <= DRAW2;
+				
+            when DRAW2 =>
+				state_number <= x"5";
+                blit_begin <= YES;
+                if (blit_done = YES) then
+                    reset_blitter <= YES;
+                    idle_x <= YES;
+                    state_x <= REST2;
+                end if;
+                
+            when REST2 =>
+				state_number <= x"6";
+                reset_blitter <= YES;
+                if(view_sof = YES) then
+					state_x <= LOAD1;
+				end if;
         end case;
     end process combinatorial;
 
