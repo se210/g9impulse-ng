@@ -348,12 +348,13 @@ begin
 --                end if;
 				--source_address_x <= "11"&x"6CFE0";
 				--source_address_x <= "10"&x"22E00";
-				source_address_x <= "00"&x"CC740";
-				--source_address_x <= "00"&x"00000";
-				target_address_x <= "00"&x"00000";
-				source_lines_x <= conv_std_logic_vector(240,8);
-				line_size_x <= conv_std_logic_vector(160,8);
-				alpha_op_x <= '1';
+				--source_address_x <= "00"&x"CC740";
+				source_address_x <= "00"&x"D14E4";
+				target_address_x <= "00"&x"04030";
+				--target_address_x <= (others => '0');
+				source_lines_x <= conv_std_logic_vector(10,8);
+				line_size_x <= conv_std_logic_vector(5,8);
+				alpha_op_x <= '0';
 
 --                if (pin_start = YES) then
 --                    idle_x  <= NO;
