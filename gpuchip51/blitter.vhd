@@ -131,6 +131,7 @@ architecture behavior of blitter is
     signal empty_q  : std_logic;
     signal wr_q_en  : std_logic;
     signal out_q    : std_logic_vector(15 downto 0);
+    signal out_q_buf    : std_logic_vector(15 downto 0);
 
     signal sdram_rd : std_logic;
     signal sram_we  : std_logic;
@@ -224,7 +225,6 @@ begin
                 if (sdram_waitrequest = NO and full_q = NO) then
                     sdram_rd <= YES;
 
-                    --read_addr_x <= read_addr_r + '1';
                     if (read_count_r = line_size - '1') then
                         read_count_x    <= x"00";
                         read_line_x     <= read_line_r + '1';
@@ -251,7 +251,6 @@ begin
                           source_lines, line_size, blit_begin,
                           front_buffer, sram_waitrequest)
     begin
-        --sram_we <= NO;
         rd_q <= NO;
 
         t_addr_x <= t_addr_r;
@@ -276,11 +275,9 @@ begin
 
             when WRITE =>
                 if (empty_q = NO and sram_waitrequest = NO) then
-                    --sram_we <= YES;
                     rd_q <= YES;
 
-                    --write_addr_x <= write_addr_r + '1';
-                    if (write_count_r = line_size - '1') then
+                    if (write_count_r = line_size - 1) then
                         write_count_x   <= x"00";
                         write_line_x    <= write_line_r + '1';
                         write_addr_x    <= t_addr_r + x"000A0";
@@ -292,7 +289,6 @@ begin
                 end if;
 
                 if (write_line_r = source_lines) then
-                    --sram_we <= NO;
                     write_state_x <= CONTINUE;
                 end if;
 
@@ -317,13 +313,14 @@ begin
 			read_state_r <= read_state_x;
 			write_state_r <= write_state_x;
 
-			write_line_r <= write_line_x;
-			write_count_r <= write_count_x;
-			write_addr_r <= write_addr_x;
-			write_addr_buf <= write_addr_r;
-			if (sram_waitrequest = NO) then
-				sram_we <= rd_q;
-			end if;
+            write_line_r <= write_line_x;
+            write_count_r <= write_count_x;
+            write_addr_r <= write_addr_x;
+            write_addr_buf <= write_addr_r;
+            if (sram_waitrequest = NO) then
+                sram_we <= rd_q;
+            end if;
+
         end if;
     end process update;
 
