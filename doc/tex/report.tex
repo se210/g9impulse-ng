@@ -23,7 +23,7 @@ the original gaming system was a project from almost 5 years ago, this
 project's aim was to import the whole system to more modern hardware 
 platform and extend its capabilities. The Altera DE2 was chosen as the
 target platform due to ECE students' relative familiarity with said
-platform. Due to obstacles encountered and time contraints, a complete
+platform. Due to obstacles encountered and time constraints, a complete
 port of the system remains unfinished. The G9 Impulse-NG currently
 only supports drawing a single frame with alpha blending for drawing
 sprites.
@@ -70,14 +70,14 @@ components inside the GPU chip on the Altera DE2 board.
 \subsubsection{GPU Chip (gpuchip.vhd)}
 The gpuchip is the top level entity inside the Altera DE2 board. It 
 takes instructions through the pin\_port\_addr and pin\_port\_in ports
-as inputs from an external PIC18F4620 microprocessor (CPU) and marshalls
+as inputs from an external PIC18F4620 microprocessor (CPU) and marshals
 the information to be used as operands for the blitter. When the blitter
 operation is done, the gpuchip signals back to the PIC that the
 operation has been completed.
 
 To use the gpuchip, appropriate registers must be loaded with all the information 
 required by the blitter to begin its operations. As the data port is only 8-bits wide,
-the information is passed from the PIC to the gpuchip in mutliple cycles. One should
+the information is passed from the PIC to the gpuchip in multiple cycles. One should
 load pin\_port\_addr with the address of the register and the 
 pin\_port\_in with the data, then raise the pin\_load to signal the
 gpuchip to update the register. Table~\ref{tab:gpu_instructions}
@@ -223,7 +223,7 @@ of the interaction is given in figure~\ref{fig:blitter_process}.
 \end{figure}
 
 This design was chosen to take advantage of being able to
-read from the sprite sheet and write to the framebuffer simutaneously.
+read from the sprite sheet and write to the framebuffer simultaneously.
 In the original G9 Impulse, this was not possible because both
 operations would involve accessing the SDRAM, but since the G9
 Impulse-NG uses the SRAM for the framebuffer, using this architecture
@@ -257,7 +257,7 @@ figure~\ref{fig:blitter_state}.
 The two processes behave almost identically except for the direction of data
 flow and the conditions which allow the process to operate. When in the
 STANDBY state, the two processes wait for the blit\_begin signal to
-begin processesing. Upon receiving the signal, various registers are
+begin processing. Upon receiving the signal, various registers are
 loaded/reset with information about the source address, target address,
 current row being read/written, and current position being read/written
 in the current row. During the READ and WRITE states, the two processes
@@ -320,7 +320,7 @@ upper left quadrant. Otherwise, it just outputs a blue color.
 
 \subsubsection{Dualport RAM (ram2port.vhd)}
 The ram2port entity is a 512-byte, 2-port memory block created by the 
-Altera MegaWizard tool. It uses the onboard M4K memory and supports 
+Altera MegaWizard tool. It uses the onchip M4K memory and supports 
 simultaneous reads and writes. It is used inside the fifo\_cc entity to 
 implement a First-In, First-Out buffer.
 
