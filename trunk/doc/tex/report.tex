@@ -332,6 +332,12 @@ data. However, a bug was discovered to be fixed when the fifo\_cc was
 utilized instead. Both FIFOs provide signals to tell the blitter when 
 reads and writes are allowed.
 
+\subsubsection{Hex Display Driver (HexDriver.vhd)}
+The HexDriver entity takes 4-bit number as its input and outputs a 7-bit 
+vector that can drive the onboard 7-segment display. The code was 
+sourced from ECE 385 class. This entity is not an integral part of the 
+GPU and was used only for debugging purposes.
+
 \subsubsection{Phase-Locked Loop (sdram\_pll.vhd)}
 The sdram\_pll is the phase-locked loop entity to ensure proper delay 
 between the system clock and the SDRAM clock. The SDRAM clock needs to 
@@ -349,13 +355,16 @@ as the column address. One should note that this format for decoding
 address is different from the one they use in the DE2 Control Panel 
 program which can be used to write data into the SDRAM. The DE2 Control 
 Panel uses bits 21 down to 20 as the bank address, bits 19 down to 8 as 
-the row address, and bits 7 down to 0 as the column address.
+the row address, and bits 7 down to 0 as the column address. Please look
+at Figure~\ref{fig:sdram_address} for the address decoding format.
 
-\subsubsection{Hex Display Driver (HexDriver.vhd)}
-The HexDriver entity takes 4-bit number as its input and outputs a 7-bit 
-vector that can drive the onboard 7-segment display. The code was 
-sourced from ECE 385 class. This entity is not an integral part of the 
-GPU and was used only for debugging purposes.
+\begin{figure}[htb!]
+    \begin{center}
+        \includegraphics[width=4.5in]{sdram_addresses}
+    \end{center}
+    \caption{SDRAM Adress Layout}
+    \label{fig:sdram_address}
+\end{figure}
 
 \subsection{Description of Software Components (Starcell XF-1 Game)}
 The original G9 Impulse came with vertical scrolling shooter arcade game 
@@ -406,10 +415,9 @@ display a scrolling background and draw sprites that move around. Audio
 may be added using the onboard support for an audio output. However, it 
 has not been tested if the expansion headers can be used to correctly 
 receive external inputs into the DE2 board, so there may still be some 
-difficulty in interfacing the board with a PIC18. It is advised that a 
-future developer continuing this project consider using a Xilinx FPGA 
-board rather than the Altera board, as Xilinx provides more resources 
-and documentation for developers.
+difficulty in interfacing the board with a PIC18. Future developers may
+consider using Xilinx FPGAs instead because of the quality of documentation
+and resources that Xilinx provides.
 
 \clearpage
 \phantomsection

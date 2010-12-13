@@ -12,9 +12,9 @@
 \contentsline {subsubsection}{Color Mapper (Color\_Mapper.vhd)}{9}{section*.8}
 \contentsline {subsubsection}{Dualport RAM (ram2port.vhd)}{10}{section*.9}
 \contentsline {subsubsection}{FIFO (fifo\_cc.vhd)}{10}{section*.10}
-\contentsline {subsubsection}{Phase-Locked Loop (sdram\_pll.vhd)}{10}{section*.11}
-\contentsline {subsubsection}{SDRAM Controller (sdram\_0.vhd)}{10}{section*.12}
-\contentsline {subsubsection}{Hex Display Driver (HexDriver.vhd)}{10}{section*.13}
+\contentsline {subsubsection}{Hex Display Driver (HexDriver.vhd)}{10}{section*.11}
+\contentsline {subsubsection}{Phase-Locked Loop (sdram\_pll.vhd)}{10}{section*.12}
+\contentsline {subsubsection}{SDRAM Controller (sdram\_0.vhd)}{10}{section*.13}
 \contentsline {subsection}{\numberline {1.5}Description of Software Components (Starcell XF-1 Game)}{11}{subsection.0.1.5}
 \contentsline {section}{\numberline {2}Results}{12}{section.0.2}
 \contentsline {section}{\numberline {3}Future Development}{12}{section.0.3}
