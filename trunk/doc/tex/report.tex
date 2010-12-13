@@ -21,18 +21,21 @@ System project by Zuofu Cheng, James Cavanaugh, Eric Sands, Sean Bires,
 and Chris Schmich during the Fall 2005 and Spring 2006 semesters. As 
 the original gaming system was a project from almost 5 years ago, this 
 project's aim was to import the whole system to more modern hardware 
-platform and extend its capabilities. However, due to technical 
-difficulties, G9 Impulse-NG currently only supports drawing a single 
-frame with alpha blending for drawing sprites.
+platform and extend its capabilities. The Altera DE2 was chosen as the
+target platform due to ECE students' relative familiarity with said
+platform. Due to obstacles encountered and time contraints, a complete
+port of the system remains unfinished. The G9 Impulse-NG currently
+only supports drawing a single frame with alpha blending for drawing
+sprites.
 
 \tableofcontents
 \newpage
 
 \section{Project Description and Overview}
 \subsection{G9 Impulse (The Original System)}
-The original G9 Impulse was an 8-bit, 2D gaming system. It takes NES 
-controller or custom arcade interface for its inputs, and the game is 
-displayed on a CRT monitor at a 320x240 resolution using interlacing 
+The original G9 Impulse was an 8-bit, 2D gaming system. It can use an NES 
+controller or custom arcade controls as input and outputs to a CRT
+monitor at a 320x240 resolution using interlacing 
 mode. It has 2-bit DAC for each of the red, blue, green colors, 
 allowing a total of 64 colors. Audio is provided through an MP3 player 
 via standard 3.5mm audio jack. For further details, please take a look 
@@ -66,11 +69,11 @@ components inside the GPU chip on the Altera DE2 board.
 
 \subsubsection{GPU Chip (gpuchip.vhd)}
 The gpuchip is the top level entity inside the Altera DE2 board. It 
-takes source address, target address, source lines, source width, and 
-alpha blending enable as its inputs from an external PIC18F4620 microprocessor 
-and passes this information onto the blitter. When the blitter operation 
-is done, the gpuchip signals back to the PIC that the operation has been 
-completed. 
+takes instructions through the pin\_port\_addr and pin\_port\_in ports
+as inputs from an external PIC18F4620 microprocessor (CPU) and marshalls
+the information to be used as operands for the blitter. When the blitter
+operation is done, the gpuchip signals back to the PIC that the
+operation has been completed.
 
 To use the gpuchip, appropriate registers must be loaded with all the information 
 required by the blitter to begin its operations. As the data port is only 8-bits wide,
@@ -107,12 +110,14 @@ gpuchip to update the register. Table~\ref{tab:gpu_instructions}
 \end{table}
 
 Figure~\ref{fig:gpu_state_diagram} shows the internal state machine of 
-gpuchip. During the INIT state, the blitter is reset for its first time use. In the LOAD state,
-the registers are loaded when the pin\_load is high. Then it continues onto the
-DRAW state when pin\_start is asserted high. In the DRAW state, the gpuchip instructs
-the blitter to begin its drawing operations. When the blitter raises the blit\_done signal,
-the gpuchip moves onto the REST state where it resets the blitter once more for next
-usage and signals the PIC18 that it is ready to accept the next command.
+gpuchip. During the INIT state, the blitter is reset for its first time 
+use. In the LOAD state, the registers are loaded when the pin\_load is 
+high. Then it continues onto the DRAW state when pin\_start is asserted 
+high. In the DRAW state, the gpuchip instructs the blitter to begin its 
+drawing operations. When the blitter raises the blit\_done signal, the 
+gpuchip moves onto the REST state where it resets the blitter once more 
+for next usage and signals the PIC that it is ready to accept the next 
+command.
 
 \begin{figure}[htb!]
     \begin{center}
@@ -123,9 +128,12 @@ usage and signals the PIC18 that it is ready to accept the next command.
 \end{figure}
 
 Figure~\ref{fig:block_diagram} shows the overall connections inside the gpuchip.
- However, due to technical difficulties in the hardware wiring 
+ However, due to connection problems in the hardware wiring 
 from the DE2 board to external devices, the current system does not 
-utilize the connections between the PIC18F4620 microprocessor.
+utilize the connections between the PIC18F4620 microprocessor. In
+particular, we believe 40-pin connector cable connecting the DE2 board
+and the breadboard where the PIC resides does not form a stable
+connection. Also, there is crosstalk among the wires of the cable.
 
 \begin{figure}
     \begin{center}
@@ -175,7 +183,7 @@ table~\ref{tab:blitter_operands}.
     \label{tab:blitter_operands}
 \end{table}
 
-The architecture of the G9 Impulse-NG was redesigned to resemble the
+The architecture of the G9 Impulse-NG was redesigned and resembles the
 original G9 Impulse blitter only in function and I/O. Originally, the
 sprite sheet and framebuffer both existed in the SDRAM. However, due to
 complications in reading and writing to the SDRAM without a
@@ -183,10 +191,10 @@ dualport module for the Altera SDRAM controller, the SRAM was used to hold the
  framebuffer. Using the SRAM also has the advantage of
 simplicity and speed, as writes to the SRAM can be completed within one
 clock cycle. As the SRAM must also be used by the view entity to calculate
-the appropriate colors to output to the VGA device, access to the
+the appropriate colors to output to the VGA device, so access to the
 SRAM must be arbitrated. To make sure there are no conflicts in using
 the SRAM, the view entity sends a sram\_waitrequest to block writes while
-the screen is being drawn. Particularly, since it is only drawing the
+the screen is being drawn. Particularly, since the VGA is only drawing the
 framebuffer to the upper left quadrant of the screen, the blitter is
 allowed to write when the VGA is drawing the bottom half of the screen.
 Figure~\ref{fig:blitter_waitrequest} shows when the blitter is allowed
@@ -264,7 +272,7 @@ original G9 Impulse implemented alpha blending by reading both from the
 framebuffer and from the sprite sheet and blitting one or both pixels
 based on the color and the value of the alpha op operand. The Xilinx
 SDRAM controller used by the G9 Impulse did not support writing and
-reading to only one byte. The SRAM used by the G9
+reading to only one byte of the two byte memory location. The SRAM used by the G9
 Impulse-NG however does support a byte enable signal. Thus, the G9
 Impulse-NG blitter is able to perform alpha blending without reading
 back from the framebuffer. The result of this is that when blitting large
@@ -280,15 +288,15 @@ blitter between operations.
 The blitter fifo entity is a 512-byte, First-In First-Out buffer created 
 by the Altera MegaWizard tool. It is implemented on the M4K memory block 
 on the FPGA board. The buffer keeps track of current level of usage. 
-Using this information, it blocks read when it is empty and blocks write 
-when it is full.
+Using this information, the blitter when it is allowed to read and
+write.
 
 \subsubsection{View (view.vhd)}
 The view entity handles outputs to the LCD monitor. It generates the 
 vertical sync, horizontal sync, and blank signals for the LCD monitor to 
 use and the appropriate RGB values that go with the current pixel 
-position on the screen. The view entity uses the onboard asynchronous 
-SRAM as the video buffer for fast access and accepts writes to the SRAM 
+position on the screen. The view entity uses the on-board asynchronous 
+SRAM as the framebuffer for fast access and allows the blitter to write to the SRAM 
 when the SRAM is not being read. The subcomponents of the view entity 
 include the VGA controller (VGA\_controller.vhd) and Color Mapper 
 (Color\_Mapper.vhd).
@@ -304,11 +312,11 @@ the University of Illinois at Urbana-Champaign.
 \subsubsection{Color Mapper (Color\_Mapper.vhd)}
 The Color Mapper entity takes the current coordinates on the screen and 
 decides which color to draw on the screen. Currently, the G9 Impulse-NG 
-outputs at a 640x480 resolution, but it only uses the upper left quarter of 
-the screen (320x240) for actually outputting the game, virtually keeping 
-the same resolution as in the original system. The Color Mapper outputs 
-the actual game if the current pixel is in the upper left quarter. 
-Otherwise, it just outputs a blue color.
+outputs at a 640x480 resolution, but it only uses the upper left
+quadrant of the screen (320x240) for actually displaying the game,
+virtually keeping the same resolution as in the original system. The 
+Color Mapper outputs the actual game if the current pixel is in the 
+upper left quadrant. Otherwise, it just outputs a blue color.
 
 \subsubsection{Dualport RAM (ram2port.vhd)}
 The ram2port entity is a 512-byte, 2-port memory block created by the 
@@ -316,11 +324,13 @@ Altera MegaWizard tool. It uses the onboard M4K memory and supports
 simultaneous reads and writes. It is used inside the fifo\_cc entity to 
 implement a First-In, First-Out buffer.
 
-\subsubsection{fifo\_cc (fifo\_cc.vhd)}
+\subsubsection{FIFO (fifo\_cc.vhd)}
 The fifo\_cc entity is a 512-byte, First-In First-Out buffer that uses 
 the ram2port entity as its component. It keeps track of current level of 
-usage. Using this information, it blocks read when it is empty and 
-blocks write when it is full.
+usage. Originally, the blitter utilized the blitter FIFO to queue pixel 
+data. However, a bug was discovered to be fixed when the fifo\_cc was 
+utilized instead. Both FIFOs provide signals to tell the blitter when 
+reads and writes are allowed.
 
 \subsubsection{Phase-Locked Loop (sdram\_pll.vhd)}
 The sdram\_pll is the phase-locked loop entity to ensure proper delay 
@@ -351,12 +361,12 @@ GPU and was used only for debugging purposes.
 The original G9 Impulse came with vertical scrolling shooter arcade game 
 written for the system titled Starcell XF-1. The game code runs on the 
 PIC18F4620 microprocessor which is the main CPU of the system. The game 
-code was not actually utilized because of technical difficulties in 
-wiring the DE2 board with the PIC. More specifically, the ribbon cable 
-used to connect the 40-pin expansion header on the DE2 board to the 
-protoboard which contains the PIC18 and other related components seemed 
-to distort the signals. However, images from the game was converted into 
-a binary file and used extensively in testing functionalities of 
+code was not actually utilized because of signal crosstalk when wiring 
+the DE2 board with the PIC. Particularly, the ribbon cable used to 
+connect the 40-pin expansion header on the DE2 board to the protoboard 
+which contains the PIC18 and other related components seemed to distort 
+and attenuate the signals. However, images from the game was converted 
+into a binary file and used extensively in testing functionalities of 
 gpuchip.
 
 \newpage
@@ -379,8 +389,14 @@ memory. After fixing this issue, the vga entity and the blitter was redesigned t
 integrate the corrected usage of the SDRAM controller, but there was not enough time 
 left for debugging the glitches in the synchronization between 
 components. Also, the PIC18F4620 hardware had to be left out of the 
-picture because of bad connection cable. The current G9 Impulse-NG 
-hardware can display a static frame with alpha blending.
+picture because of bad connection cable. The blitter contains a bug that 
+causes the writer to never reach the CONTINUE state, though on screen, 
+the blit appears to be completed. We speculate the bug could be caused 
+by reading and writing to a nearly empty queue at the same time.  
+Perhaps the issue can be fixed by having the blitter writer only operate 
+when the queue size is above a minimum threshold. Due to the 
+aforementioned problems, the current G9 Impulse-NG hardware can display 
+a static frame alpha blended onto the framebuffer.
 
 \section{Future Development}
 As it has been discovered how to access the SDRAM and other required 
@@ -394,8 +410,6 @@ difficulty in interfacing the board with a PIC18. It is advised that a
 future developer continuing this project consider using a Xilinx FPGA 
 board rather than the Altera board, as Xilinx provides more resources 
 and documentation for developers.
-
-\section*{}
 
 \clearpage
 \phantomsection
