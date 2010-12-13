@@ -5,17 +5,17 @@
 \contentsline {subsection}{\numberline {1.3}Tools Used}{3}{subsection.0.1.3}
 \contentsline {subsection}{\numberline {1.4}Description of GPU Components}{3}{subsection.0.1.4}
 \contentsline {subsubsection}{GPU Chip (gpuchip.vhd)}{3}{section*.3}
-\contentsline {subsubsection}{Blitter}{6}{section*.4}
+\contentsline {subsubsection}{Blitter}{5}{section*.4}
 \contentsline {subsubsection}{Blitter FIFO (blitter\_fifo.vhd)}{9}{section*.5}
 \contentsline {subsubsection}{View (view.vhd)}{9}{section*.6}
 \contentsline {subsubsection}{VGA Controller (VGA\_controller.vhd)}{9}{section*.7}
 \contentsline {subsubsection}{Color Mapper (Color\_Mapper.vhd)}{9}{section*.8}
 \contentsline {subsubsection}{Dualport RAM (ram2port.vhd)}{10}{section*.9}
-\contentsline {subsubsection}{fifo\_cc (fifo\_cc.vhd)}{10}{section*.10}
+\contentsline {subsubsection}{FIFO (fifo\_cc.vhd)}{10}{section*.10}
 \contentsline {subsubsection}{Phase-Locked Loop (sdram\_pll.vhd)}{10}{section*.11}
 \contentsline {subsubsection}{SDRAM Controller (sdram\_0.vhd)}{10}{section*.12}
 \contentsline {subsubsection}{Hex Display Driver (HexDriver.vhd)}{10}{section*.13}
 \contentsline {subsection}{\numberline {1.5}Description of Software Components (Starcell XF-1 Game)}{11}{subsection.0.1.5}
 \contentsline {section}{\numberline {2}Results}{12}{section.0.2}
 \contentsline {section}{\numberline {3}Future Development}{12}{section.0.3}
-\contentsline {subsection}{Bibliography}{13}{section*.15}
+\contentsline {subsection}{Bibliography}{13}{section*.14}
