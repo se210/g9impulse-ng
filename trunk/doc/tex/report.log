@@ -1,23 +1,21 @@
-This is pdfTeX, Version 3.1415926-1.40.11 (TeX Live 2010/Arch Linux) (format=pdflatex 2010.11.9)  12 DEC 2010 22:07
+This is pdfTeX, Version 3.1415926-1.40.11 (MiKTeX 2.9) (preloaded format=pdflatex 2010.12.13)  13 DEC 2010 04:54
 entering extended mode
- restricted \write18 enabled.
- %&-line parsing enabled.
 **report.tex
-(./report.tex
+("C:\Users\SEJOON\Desktop\ECE 395\g9impulse-ng\doc\tex\report.tex"
 LaTeX2e <2009/09/24>
-Babel <v3.8l> and hyphenation patterns for english, dumylang, nohyphenation, ge
-rman-x-2009-06-19, ngerman-x-2009-06-19, afrikaans, ancientgreek, ibycus, arabi
-c, armenian, basque, bulgarian, catalan, pinyin, coptic, croatian, czech, danis
-h, dutch, ukenglish, usenglishmax, esperanto, estonian, farsi, finnish, french,
- galician, german, ngerman, swissgerman, monogreek, greek, hungarian, icelandic
-, assamese, bengali, gujarati, hindi, kannada, malayalam, marathi, oriya, panja
-bi, tamil, telugu, indonesian, interlingua, irish, italian, kurmanji, lao, lati
-n, latvian, lithuanian, mongolian, mongolianlmc, bokmal, nynorsk, polish, portu
-guese, romanian, russian, sanskrit, serbian, slovak, slovenian, spanish, swedis
-h, turkish, turkmen, ukrainian, uppersorbian, welsh, loaded.
-(/usr/share/texmf-dist/tex/latex/base/report.cls
+Babel <v3.8l> and hyphenation patterns for english, afrikaans, ancientgreek, ar
+abic, armenian, assamese, basque, bengali, bokmal, bulgarian, catalan, coptic, 
+croatian, czech, danish, dutch, esperanto, estonian, farsi, finnish, french, ga
+lician, german, german-x-2009-06-19, greek, gujarati, hindi, hungarian, iceland
+ic, indonesian, interlingua, irish, italian, kannada, kurmanji, lao, latin, lat
+vian, lithuanian, malayalam, marathi, mongolian, mongolianlmc, monogreek, ngerm
+an, ngerman-x-2009-06-19, nynorsk, oriya, panjabi, pinyin, polish, portuguese, 
+romanian, russian, sanskrit, serbian, slovak, slovenian, spanish, swedish, swis
+sgerman, tamil, telugu, turkish, turkmen, ukenglish, ukrainian, uppersorbian, u
+senglishmax, welsh, loaded.
+("C:\Program Files\MiKTeX 2.9\tex\latex\base\report.cls"
 Document Class: report 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-dist/tex/latex/base/size10.clo
+("C:\Program Files\MiKTeX 2.9\tex\latex\base\size10.clo"
 File: size10.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
 )
 \c@part=\count79
@@ -33,59 +31,59 @@ File: size10.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
 \belowcaptionskip=\skip42
 \bibindent=\dimen102
 )
-(/usr/share/texmf-dist/tex/latex/graphics/graphicx.sty
+("C:\Program Files\MiKTeX 2.9\tex\latex\graphics\graphicx.sty"
 Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
 
-(/usr/share/texmf-dist/tex/latex/graphics/keyval.sty
+("C:\Program Files\MiKTeX 2.9\tex\latex\graphics\keyval.sty"
 Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
 \KV@toks@=\toks14
 )
-(/usr/share/texmf-dist/tex/latex/graphics/graphics.sty
+("C:\Program Files\MiKTeX 2.9\tex\latex\graphics\graphics.sty"
 Package: graphics 2009/02/05 v1.0o Standard LaTeX Graphics (DPC,SPQR)
 
-(/usr/share/texmf-dist/tex/latex/graphics/trig.sty
+("C:\Program Files\MiKTeX 2.9\tex\latex\graphics\trig.sty"
 Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
 )
-(/usr/share/texmf-dist/tex/latex/latexconfig/graphics.cfg
-File: graphics.cfg 2010/04/23 v1.9 graphics configuration of TeX Live
+("C:\Program Files\MiKTeX 2.9\tex\latex\00miktex\graphics.cfg"
+File: graphics.cfg 2007/01/18 v1.5 graphics configuration of teTeX/TeXLive
 )
 Package graphics Info: Driver file: pdftex.def on input line 91.
 
-(/usr/share/texmf-dist/tex/latex/pdftex-def/pdftex.def
+("C:\Program Files\MiKTeX 2.9\tex\latex\pdftex-def\pdftex.def"
 File: pdftex.def 2010/09/14 v0.05b Graphics/color for pdfTeX
 \Gread@gobject=\count88
 ))
 \Gin@req@height=\dimen103
 \Gin@req@width=\dimen104
 )
-(/usr/share/texmf-dist/tex/latex/hyperref/hyperref.sty
+("C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\hyperref.sty"
 Package: hyperref 2010/10/30 v6.81t Hypertext links for LaTeX
 
-(/usr/share/texmf-dist/tex/generic/oberdiek/ltxcmds.sty
+("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\ltxcmds.sty"
 Package: ltxcmds 2010/04/26 v1.7 LaTeX kernel commands for general use (HO)
 )
-(/usr/share/texmf-dist/tex/generic/oberdiek/infwarerr.sty
+("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\infwarerr.sty"
 Package: infwarerr 2010/04/08 v1.3 Providing info/warning/message (HO)
 )
-(/usr/share/texmf-dist/tex/generic/oberdiek/kvsetkeys.sty
+("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\kvsetkeys.sty"
 Package: kvsetkeys 2010/03/01 v1.9 Key value parser (HO)
 
-(/usr/share/texmf-dist/tex/generic/oberdiek/etexcmds.sty
+("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\etexcmds.sty"
 Package: etexcmds 2010/01/28 v1.3 Prefix for e-TeX command names (HO)
 Package etexcmds Info: Could not find \expanded.
 (etexcmds)             That can mean that you are not using pdfTeX 1.50 or
 (etexcmds)             that some package has redefined \expanded.
 (etexcmds)             In the latter case, load this package earlier.
 ))
-(/usr/share/texmf-dist/tex/generic/oberdiek/pdfescape.sty
+("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\pdfescape.sty"
 Package: pdfescape 2010/03/01 v1.9 Provides hex, PDF name and string conversion
 s (HO)
 
-(/usr/share/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
+("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\pdftexcmds.sty"
 Package: pdftexcmds 2010/04/01 v0.9 Utility functions of pdfTeX for LuaTeX (HO)
 
 
-(/usr/share/texmf-dist/tex/generic/oberdiek/ifluatex.sty
+("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\ifluatex.sty"
 Package: ifluatex 2010/03/01 v1.3 Provides the ifluatex switch (HO)
 Package ifluatex Info: LuaTeX not detected.
 )
@@ -93,42 +91,42 @@ Package pdftexcmds Info: LuaTeX not detected.
 Package pdftexcmds Info: \pdf@primitive is available.
 Package pdftexcmds Info: \pdf@ifprimitive is available.
 ))
-(/usr/share/texmf-dist/tex/generic/oberdiek/ifpdf.sty
+("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\ifpdf.sty"
 Package: ifpdf 2010/01/28 v2.1 Provides the ifpdf switch (HO)
 Package ifpdf Info: pdfTeX in pdf mode detected.
 )
-(/usr/share/texmf-dist/tex/generic/oberdiek/ifvtex.sty
+("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\ifvtex.sty"
 Package: ifvtex 2010/03/01 v1.5 Switches for detecting VTeX and its modes (HO)
 Package ifvtex Info: VTeX not detected.
 )
-(/usr/share/texmf-dist/tex/generic/ifxetex/ifxetex.sty
+("C:\Program Files\MiKTeX 2.9\tex\generic\ifxetex\ifxetex.sty"
 Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
 )
-(/usr/share/texmf-dist/tex/latex/oberdiek/hycolor.sty
+("C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\hycolor.sty"
 Package: hycolor 2009/12/12 v1.6 Color options of hyperref/bookmark (HO)
 
-(/usr/share/texmf-dist/tex/latex/oberdiek/xcolor-patch.sty
+("C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\xcolor-patch.sty"
 Package: xcolor-patch 2009/12/12 xcolor patch
 ))
-(/usr/share/texmf-dist/tex/latex/oberdiek/letltxmacro.sty
+("C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\letltxmacro.sty"
 Package: letltxmacro 2008/06/24 v1.3 Let assignment for LaTeX macros (HO)
 )
-(/usr/share/texmf-dist/tex/latex/oberdiek/kvoptions.sty
+("C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\kvoptions.sty"
 Package: kvoptions 2010/02/22 v3.7 Keyval support for LaTeX options (HO)
 )
 \@linkdim=\dimen105
 \Hy@linkcounter=\count89
 \Hy@pagecounter=\count90
 
-(/usr/share/texmf-dist/tex/latex/hyperref/pd1enc.def
+("C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\pd1enc.def"
 File: pd1enc.def 2010/10/30 v6.81t Hyperref: PDFDocEncoding definition (HO)
 )
-(/usr/share/texmf-dist/tex/generic/oberdiek/intcalc.sty
+("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\intcalc.sty"
 Package: intcalc 2007/09/27 v1.1 Expandable integer calculations (HO)
 )
 \Hy@SavedSpaceFactor=\count91
 
-(/usr/share/texmf-dist/tex/latex/latexconfig/hyperref.cfg
+("C:\Program Files\MiKTeX 2.9\tex\latex\00miktex\hyperref.cfg"
 File: hyperref.cfg 2002/06/06 v1.2 hyperref configuration of TeXLive
 )
 Package hyperref Info: Hyper figures OFF on input line 3976.
@@ -140,16 +138,16 @@ Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
 Package hyperref Info: Bookmarks ON on input line 4211.
 \c@Hy@tempcnt=\count92
 
-(/usr/share/texmf-dist/tex/latex/url/url.sty
+("C:\Program Files\MiKTeX 2.9\tex\latex\ltxmisc\url.sty"
 \Urlmuskip=\muskip10
 Package: url 2006/04/12  ver 3.3  Verb mode for urls, etc.
 )
 LaTeX Info: Redefining \url on input line 4566.
 
-(/usr/share/texmf-dist/tex/generic/oberdiek/bitset.sty
+("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\bitset.sty"
 Package: bitset 2007/09/28 v1.0 Data type bit set (HO)
 
-(/usr/share/texmf-dist/tex/generic/oberdiek/bigintcalc.sty
+("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\bigintcalc.sty"
 Package: bigintcalc 2007/11/11 v1.1 Expandable big integer calculations (HO)
 ))
 \Fld@menulength=\count93
@@ -165,7 +163,7 @@ Package hyperref Info: PDF/A mode OFF on input line 5656.
 LaTeX Info: Redefining \ref on input line 5696.
 LaTeX Info: Redefining \pageref on input line 5700.
 
-(/usr/share/texmf-dist/tex/generic/oberdiek/atbegshi.sty
+("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\atbegshi.sty"
 Package: atbegshi 2010/03/25 v1.12 At begin shipout hook (HO)
 )
 \Hy@abspage=\count94
@@ -175,29 +173,28 @@ Package: atbegshi 2010/03/25 v1.12 At begin shipout hook (HO)
 
 Package hyperref Message: Driver (autodetected): hpdftex.
 
-(/usr/share/texmf-dist/tex/latex/hyperref/hpdftex.def
+("C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\hpdftex.def"
 File: hpdftex.def 2010/10/30 v6.81t Hyperref driver for pdfTeX
 
-(/usr/share/texmf-dist/tex/latex/oberdiek/atveryend.sty
+("C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\atveryend.sty"
 Package: atveryend 2010/03/24 v1.5 Hooks at very end of document (HO)
 Package atveryend Info: \enddocument detected (standard).
 )
 \Fld@listcount=\count97
 \c@bookmark@seq@number=\count98
 
-(/usr/share/texmf-dist/tex/latex/oberdiek/rerunfilecheck.sty
+("C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\rerunfilecheck.sty"
 Package: rerunfilecheck 2010/03/16 v1.6 Rerun checks for auxiliary files (HO)
 
-(/usr/share/texmf-dist/tex/generic/oberdiek/uniquecounter.sty
+("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\uniquecounter.sty"
 Package: uniquecounter 2009/12/18 v1.1 Provides unlimited unique counter (HO)
 )
 Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 71.
 )
 \Hy@SectionHShift=\skip43
-) (./report.aux)
-\openout1 = `report.aux'.
-
+)
+("C:\Users\SEJOON\Desktop\ECE 395\g9impulse-ng\doc\tex\report.aux")
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 13.
 LaTeX Font Info:    ... okay on input line 13.
 LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 13.
@@ -212,7 +209,8 @@ LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 13.
 LaTeX Font Info:    ... okay on input line 13.
 LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 13.
 LaTeX Font Info:    ... okay on input line 13.
-(/usr/share/texmf-dist/tex/context/base/supp-pdf.mkii
+
+("C:\Program Files\MiKTeX 2.9\tex\context\base\supp-pdf.mkii"
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count99
 \scratchdimen=\dimen108
@@ -224,31 +222,16 @@ LaTeX Font Info:    ... okay on input line 13.
 \MPscratchDim=\dimen109
 \MPnumerator=\count103
 \everyMPtoPDFconversion=\toks16
-) (/usr/share/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
-Package: epstopdf-base 2010/02/09 v2.5 Base part for package epstopdf
-
-(/usr/share/texmf-dist/tex/latex/oberdiek/grfext.sty
-Package: grfext 2007/09/30 v1.0 Managing graphics extensions (HO)
 )
-Package grfext Info: Graphics extension search list:
-(grfext)             [.png,.pdf,.jpg,.mps,.jpeg,.jbig2,.jb2,.PNG,.PDF,.JPG,.JPE
-G,.JBIG2,.JB2,.eps]
-(grfext)             \AppendGraphicsExtensions on input line 436.
-
-(/usr/share/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
-File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
-e
-))
 \AtBeginShipoutBox=\box27
 Package hyperref Info: Link coloring OFF on input line 13.
-
-(/usr/share/texmf-dist/tex/latex/hyperref/nameref.sty
+ ("C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\nameref.sty"
 Package: nameref 2010/04/30 v2.40 Cross-referencing by name of section
 
-(/usr/share/texmf-dist/tex/latex/oberdiek/refcount.sty
+("C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\refcount.sty"
 Package: refcount 2008/08/11 v3.1 Data extraction from references (HO)
 )
-(/usr/share/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
+("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\gettitlestring.sty"
 Package: gettitlestring 2009/12/18 v1.3 Cleanup title references (HO)
 )
 \c@section@level=\count104
@@ -256,10 +239,10 @@ Package: gettitlestring 2009/12/18 v1.3 Cleanup title references (HO)
 LaTeX Info: Redefining \ref on input line 13.
 LaTeX Info: Redefining \pageref on input line 13.
 LaTeX Info: Redefining \nameref on input line 13.
- (./report.out) (./report.out)
-\@outlinefile=\write3
-\openout3 = `report.out'.
 
+("C:\Users\SEJOON\Desktop\ECE 395\g9impulse-ng\doc\tex\report.out")
+("C:\Users\SEJOON\Desktop\ECE 395\g9impulse-ng\doc\tex\report.out")
+\@outlinefile=\write3
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <12> on input line 15.
 LaTeX Font Info:    External font `cmex10' loaded for size
@@ -268,57 +251,58 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <6> on input line 15.
  [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-Missing character: There is no â in font cmr10!
-Missing character: There is no € in font cmr10!
-Missing character: There is no ™ in font cmr10!
-pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has 
-been already used, duplicate ignored
+{C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map}]pdfTeX warning (ext4): des
+tination with the same identifier (name{page.1}) has been already used, duplica
+te ignored
 <to be read again> 
                    \relax 
 l.28 \tableofcontents
-                      [1] (./report.toc
+                      [1]
+("C:\Users\SEJOON\Desktop\ECE 395\g9impulse-ng\doc\tex\report.toc"
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <7> on input line 1.
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <5> on input line 1.
 )
 \tf@toc=\write4
-\openout4 = `report.toc'.
-
  [2
 
 ]
 Overfull \hbox (1.49698pt too wide) in paragraph at lines 33--41
-\OT1/cmtt/m/n/10 engr . illinois . edu / ece395 / projects / spring2006 / proje
-ct9 _ final _ paper .
+$\OT1/cmtt/m/n/10 engr . illinois . edu / ece395 / projects / spring2006 / proj
+ect9 _ final _ paper .$
  []
 
-<gpu-inside.pdf, id=72, 1127.72525pt x 1874.45804pt>
+[3] <gpu_state.pdf, id=82, 299.11815pt x 421.57594pt>
+File: gpu_state.pdf Graphic file (type pdf)
+ <use gpu_state.pdf>
+<gpu-inside.pdf, id=85, 1127.72525pt x 1874.45804pt>
 File: gpu-inside.pdf Graphic file (type pdf)
  <use gpu-inside.pdf>
-<gpu_state.pdf, id=73, 299.11815pt x 421.57594pt>
-File: gpu_state.pdf Graphic file (type pdf)
- <use gpu_state.pdf> [3]
-[4 <./gpu-inside.pdf>]
-Overfull \hbox (11.13672pt too wide) in paragraph at lines 119--130
-\OT1/cmr/m/n/10 ca-tion as out-lined in []$\OT1/cmtt/m/n/10 http : / / www . al
-tera . com / literature / manual / mnl _ avalon _
- []
-
-[5 <./gpu_state.pdf>] [6]
-<blitter_waitrequest.pdf, id=130, 611.44194pt x 411.6459pt>
+[4 <C:/Users/SEJOON/Desktop/ECE 395/g9impulse-ng/doc/tex/gpu_state.pdf>]
+[5 <C:/Users/SEJOON/Desktop/ECE 395/g9impulse-ng/doc/tex/gpu-inside.pdf>]
+<blitter_waitrequest.pdf, id=116, 611.44194pt x 411.6459pt>
 File: blitter_waitrequest.pdf Graphic file (type pdf)
 
-<use blitter_waitrequest.pdf> [7 <./blitter_waitrequest.pdf>]
-<blitter_process.pdf, id=138, 299.11815pt x 688.55669pt>
+<use blitter_waitrequest.pdf>
+<blitter_process.pdf, id=118, 299.11815pt x 688.55669pt>
 File: blitter_process.pdf Graphic file (type pdf)
 
-<use blitter_process.pdf> <blitter_state.pdf, id=141, 614.295pt x 794.97pt>
+<use blitter_process.pdf> [6]
+<blitter_state.pdf, id=130, 614.295pt x 794.97pt>
 File: blitter_state.pdf Graphic file (type pdf)
+ <use blitter_state.pdf>
+[7 <C:/Users/SEJOON/Desktop/ECE 395/g9impulse-ng/doc/tex/blitter_process.pdf> <
+C:/Users/SEJOON/Desktop/ECE 395/g9impulse-ng/doc/tex/blitter_waitrequest.pdf>]
+[8 <C:/Users/SEJOON/Desktop/ECE 395/g9impulse-ng/doc/tex/blitter_state.pdf>]
+[9]
+Overfull \hbox (11.13672pt too wide) in paragraph at lines 332--343
+\OT1/cmr/m/n/10 ca-tion as out-lined in []$\OT1/cmtt/m/n/10 http : / / www . al
+tera . com / literature / manual / mnl _ avalon _$
+ []
 
-<use blitter_state.pdf> [8 <./blitter_process.pdf>] [9 <./blitter_state.pdf>]
-[10] [11] (./report.bbl
+[10] [11] [12] ("C:\Users\SEJOON\Desktop\ECE 395\g9impulse-ng\doc\tex\report.bb
+l"
 Underfull \hbox (badness 4859) in paragraph at lines 4--8
 []\OT1/cmr/m/n/10 Using the sdram mem-ory on al-tera's de2 board with vhdl de-
  []
@@ -326,44 +310,44 @@ Underfull \hbox (badness 4859) in paragraph at lines 4--8
 
 Underfull \hbox (badness 3471) in paragraph at lines 4--8
 \OT1/cmr/m/n/10 sign.  []$\OT1/cmtt/m/n/10 http : / / www . cs . columbia . edu
- / []sedwards / classes / 2010 / 4840 /
+ / []sedwards / classes / 2010 / 4840 /$
  []
 
 
 Underfull \hbox (badness 2662) in paragraph at lines 10--15
-\OT1/cmtt/m/n/10 edu / ece395 / projects / spring2006 / project9 _ final _ pape
-r . doc$[]\OT1/cmr/m/n/10 , Spring
+$\OT1/cmtt/m/n/10 edu / ece395 / projects / spring2006 / project9 _ final _ pap
+er . doc$[]\OT1/cmr/m/n/10 , Spring
  []
 
 )
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 402.
- [12
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 416.
+ [13
 
 
 ]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 402.
- (./report.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 402.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 416.
+ ("C:\Users\SEJOON\Desktop\ECE 395\g9impulse-ng\doc\tex\report.aux")
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 416.
 Package rerunfilecheck Info: File `report.out' has not changed.
-(rerunfilecheck)             Checksum: 896A6DE8CB7A5469C83F00981E25CEF6;681.
+(rerunfilecheck)             Checksum: ACB580E9A7B51A2447A3CA59C49EE477;691.
  ) 
 Here is how much of TeX's memory you used:
- 4919 strings out of 493738
- 73179 string characters out of 3148797
- 156167 words of memory out of 3000000
- 8093 multiletter control sequences out of 15000+200000
+ 4815 strings out of 494019
+ 72546 string characters out of 3146494
+ 152852 words of memory out of 3000000
+ 7993 multiletter control sequences out of 15000+200000
  8669 words of font info for 31 fonts, out of 3000000 for 9000
  714 hyphenation exceptions out of 8191
  31i,7n,28p,220b,327s stack positions out of 5000i,500n,10000p,200000b,50000s
-</usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/
-texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texmf-dist/fon
-ts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texmf-dist/fonts/type1/public
-/amsfonts/cm/cmr12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cm
-r17.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on report.pdf (13 pages, 260343 bytes).
+<C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Pr
+ogram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Program Fi
+les/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program Files/MiKTe
+X 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Program Files/MiKTeX 2.9/fon
+ts/type1/public/amsfonts/cm/cmr17.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/
+public/amsfonts/cm/cmtt10.pfb>
+Output written on report.pdf (14 pages, 286146 bytes).
 PDF statistics:
- 250 PDF objects out of 1000 (max. 8388607)
- 210 compressed objects within 3 object streams
- 52 named destinations out of 1000 (max. 500000)
+ 252 PDF objects out of 1000 (max. 8388607)
+ 53 named destinations out of 1000 (max. 500000)
  124 words of extra memory for PDF output out of 10000 (max. 10000000)
 
