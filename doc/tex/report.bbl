@@ -1,0 +1,51 @@
+\begin{thebibliography}{1}
+
+\bibitem{website:Using}
+Using the sdram memory on altera's de2 board with vhdl design.
+\newblock
+  \url{http://www.cs.columbia.edu/~sedwards/classes/2010/4840/tut_DE2_sdram_vhdl.pdf},
+  2008.
+
+\bibitem{website:G9Impulse}
+Zuofu Cheng, James Cavanaugh, Eric Sands, Sean Bires, and Chris Schmich.
+\newblock G9 impulse: 2d video game system.
+\newblock
+  \url{https://courses.engr.illinois.edu/ece395/projects/spring2006/project9_final_paper.doc},
+  Spring 2006.
+
+\bibitem{website:DE2}
+Altera Corp.
+\newblock De2 development and education board user manual.
+\newblock \url{ftp://ftp.altera.com/up/pub/Webdocs/DE2_UserManual.pdf}, 2006.
+
+\bibitem{website:Avalon}
+Altera Corp.
+\newblock Avalon interface specifications.
+\newblock \url{http://www.altera.com/literature/manual/mnl_avalon_spec.pdf},
+  August 2010.
+
+\bibitem{website:PLL}
+Altera Corp.
+\newblock Phase-locked loop (altpll) megafunction user guide.
+\newblock \url{http://www.altera.com/literature/ug/ug_altpll.pdf}, November
+  2010.
+
+\bibitem{website:dualport}
+XESS Corp.
+\newblock Dualport module for the sdram controller.
+\newblock \url{http://www.xess.com/appnotes/an-071205-dualport.pdf }, July
+  2005.
+
+\bibitem{website:XSA}
+XESS Corp.
+\newblock Xsa board sdram controller.
+\newblock \url{http://www.xess.com/appnotes/an-071205-xsasdramcntl.pdf}, July
+  2005.
+
+\bibitem{website:XSB}
+XESS Corp.
+\newblock Xsa board sdram controller.
+\newblock \url{http://www.xess.com/appnotes/an-071205-xsbsdramcntl.pdf}, July
+  2005.
+
+\end{thebibliography}
